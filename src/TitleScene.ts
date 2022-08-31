@@ -27,7 +27,17 @@ export class TitleScene extends Container implements IScene {
         this.titleContainer.position.y = 150;
     
         this.addChild(this.titleContainer);
+
+        this.addButtons();
         this.addFrame();
+    }
+
+    public addButtons(): void {
+        const rButton: Sprite = Sprite.from('play-button.png');
+        rButton.scale.set(0.1);
+        rButton.position.set(1500, 650);
+        rButton.interactive = true;
+        this.titleContainer.addChild(rButton);
     }
 
     public update(_delta: number): void {
