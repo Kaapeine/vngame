@@ -1,11 +1,29 @@
 import { Container, Texture, Sprite } from "pixi.js";
-import { IScene } from "./Manager";
+import { IntroScene } from "./IntroScene";
+import { IScene, Manager } from "./Manager";
 
+export class SceneOne extends Container implements IScene {
 
-export class SCENENAME extends Container implements IScene {
+    private mainContainer: Container = new Container();
+    private rain: Sprite;
 
     constructor() {
         super();
+
+        const sceneOneBg = Sprite.from('scene_one/Background.png');
+        this.mainContainer.addChild(sceneOneBg);
+
+        this.rain = Sprite.from('scene_one/Rain.png');
+        this.mainContainer.addChild(this.rain);
+
+        const houseGrass = Sprite.from('scene_one/House_Grass.png');
+        this.mainContainer.addChild(houseGrass);
+
+        this.mainContainer.position.set(150, 150);
+
+        this.addChild(this.mainContainer);
+        this.addFrame();
+        this.addButtons();
     }
 
     public goNext(_event: Event): void {
@@ -13,12 +31,10 @@ export class SCENENAME extends Container implements IScene {
         }
 
     public goPrev(_event: Event): void {
-        alert('hi');
+        Manager.changeScene(new IntroScene);
     }
 
     public update(_delta: number): void {
-        // this.leavesAngle += 0.01;
-        // this.leaves.rotation = this.leavesAngle;
     }
 
     public addButtons(): void {

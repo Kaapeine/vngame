@@ -1,5 +1,6 @@
 import { Container, Sprite, Texture } from "pixi.js";
 import { IScene, Manager } from "./Manager";
+import { SceneOne } from "./SceneOne";
 import { TitleScene } from "./TitleScene";
 
 export class IntroScene extends Container implements IScene {
@@ -68,7 +69,7 @@ export class IntroScene extends Container implements IScene {
     }
 
     public goNext(_event: Event): void {
-        alert('next scene');
+        Manager.changeScene(new SceneOne);
     }
 
     public goPrev(_event: Event): void {
