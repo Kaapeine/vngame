@@ -1,17 +1,16 @@
-import { Container, Sprite } from "pixi.js";
-import { IScene } from "./Manager";
+import { Container, Point, Sprite } from "pixi.js";
+import { IntroScene } from "./IntroScene";
+import { IScene, Manager } from "./Manager";
 
 export class TitleScene extends Container implements IScene {
 
     // for making our loader graphics...
-    private titleContainer: Container;
+    private titleContainer: Container = new Container();
     private leaves: Sprite;
     // private leavesAngle: number = 0;
     
     constructor() {
         super();
-
-        this.titleContainer = new Container();
 
         const titleBg: Sprite = Sprite.from('title_screen/BG.png');
         this.titleContainer.addChild(titleBg);
@@ -22,22 +21,37 @@ export class TitleScene extends Container implements IScene {
 
         const topBg: Sprite = Sprite.from('title_screen/Front.png');
         this.titleContainer.addChild(topBg);
-        
+
+        // move titleContainer to frame bounds
         this.titleContainer.position.x = 150;
         this.titleContainer.position.y = 150;
     
         this.addChild(this.titleContainer);
 
-        this.addButtons();
+        this.addHeart();
         this.addFrame();
     }
 
-    public addButtons(): void {
-        const rButton: Sprite = Sprite.from('play-button.png');
-        rButton.scale.set(0.1);
-        rButton.position.set(1500, 650);
-        rButton.interactive = true;
-        this.titleContainer.addChild(rButton);
+    public addHeart(): void {
+        const heart: Sprite = Sprite.from('play-button.png');
+        heart.scale.set(0.1);
+
+        let globalPos: Point = new Point(1140, 505);
+        const localPos: Point = this.titleContainer.toLocal(globalPos);
+        heart.position.set(localPos.x, localPos.y);
+
+        heart.interactive = true;
+        heart.on('pointerdown', (_event) => this.goNext(_event));
+        
+        this.titleContainer.addChild(heart);
+    }
+
+    public goNext(_event: Event): void {
+        Manager.changeScene(new IntroScene);
+    }
+
+    public goPrev(_event: Event): void {
+        alert('hi');
     }
 
     public update(_delta: number): void {

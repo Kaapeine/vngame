@@ -65,5 +65,7 @@ export class Manager {
 
 export interface IScene extends DisplayObject {
     update(framesPassed: number): void;
+    goNext(_event: Event): void;
+    goPrev(_event: Event): void;
     addFrame(): void;
 }
