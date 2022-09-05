@@ -1,4 +1,4 @@
-import { Container, Point, Sprite } from "pixi.js";
+import { AnimatedSprite, Texture, Container, Point, Sprite} from "pixi.js";
 import { IntroScene } from "./IntroScene";
 import { IScene, Manager } from "./Manager";
 
@@ -33,12 +33,22 @@ export class TitleScene extends Container implements IScene {
     }
 
     public addHeart(): void {
-        const heart: Sprite = Sprite.from('play-button.png');
-        heart.scale.set(0.1);
+        const heartSequence: Array<string> = ["title_screen/heart/1.png", "title_screen/heart/2.png", "title_screen/heart/3.png", "title_screen/heart/4.png"];
+        let heartTextureSequence: Array<Texture> = [];
+        for (let i = 0; i < heartSequence.length; i++){
+            // console.log(i);
+            let tex = Texture.from(heartSequence[i]);
+            heartTextureSequence.push(tex);
+        }
+        console.log("Size: ", heartTextureSequence.length);
+        const heart: AnimatedSprite = new AnimatedSprite(heartTextureSequence);
 
-        let globalPos: Point = new Point(1140, 505);
-        const localPos: Point = this.titleContainer.toLocal(globalPos);
+        let globalPos: Point = new Point(1110, 490);
+        let localPos: Point = this.titleContainer.toLocal(globalPos);
         heart.position.set(localPos.x, localPos.y);
+
+        heart.play();
+        heart.animationSpeed = 0.1;
 
         heart.interactive = true;
         heart.on('pointerdown', (_event) => this.goNext(_event));
