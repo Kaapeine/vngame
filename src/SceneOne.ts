@@ -1,40 +1,89 @@
-import { Container, Texture, Sprite } from "pixi.js";
+import { Container, Texture, Sprite, Point, InteractionEvent, AnimatedSprite } from "pixi.js";
 import { IntroScene } from "./IntroScene";
 import { IScene, Manager } from "./Manager";
 
 export class SceneOne extends Container implements IScene {
 
     private mainContainer: Container = new Container();
-    private rain: Sprite;
+    private cursorFirefly: AnimatedSprite;
+    private wheat: Sprite;
 
     constructor() {
         super();
 
+        const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
+        let fireflyTextureSeq: Array<Texture> = [];
+        for (let i = 0; i < fireflySeq.length; i++){
+            let tex = Texture.from(fireflySeq[i]);
+            fireflyTextureSeq.push(tex);
+        }
+        this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
+        this.cursorFirefly.play();
+        this.cursorFirefly.animationSpeed = 0.05;
+
         const sceneOneBg = Sprite.from('scene_one/Background.png');
         this.mainContainer.addChild(sceneOneBg);
 
-        this.rain = Sprite.from('scene_one/Rain.png');
-        this.mainContainer.addChild(this.rain);
+        const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
+        let rainTextureSeq: Array<Texture> = [];
+        for (let i = 0; i < rainSeq.length; i++) {
+            let tex = Texture.from(rainSeq[i]);
+            rainTextureSeq.push(tex);
+        }
+        const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
+        rain.play();
+        rain.animationSpeed = 0.12;
+        this.mainContainer.addChild(rain);
 
-        const houseGrass = Sprite.from('scene_one/House_Grass.png');
+        const houseGrass: Sprite = Sprite.from('scene_one/House_Grass.png');
         this.mainContainer.addChild(houseGrass);
 
+        this.wheat = Sprite.from('scene_one/wheat.png');
+        this.wheat.interactive = true;
+        this.wheat.on('pointerdown', this.showJackal, this);
+        this.mainContainer.addChild(this.wheat);
+
+        const aami = Sprite.from('scene_one/Aami.png');
+        aami.position.set(351, 426);
+        this.mainContainer.addChild(aami);
+
         this.mainContainer.position.set(150, 150);
+
+        this.mainContainer.addChild(this.cursorFirefly);
+        this.mainContainer.interactive = true;
+        this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
     }
 
+    public showJackal(_event: Event): void {
+        let jackal: Texture = Texture.from('scene_one/jackal.png');
+        this.wheat.texture = jackal;
+    }
+
+    public update(_delta: number): void {
+        this.cursorFirefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+        this.cursorFirefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+    }
+
     public goNext(_event: Event): void {
         alert('hi');
-        }
+    }
 
     public goPrev(_event: Event): void {
         Manager.changeScene(new IntroScene);
     }
 
-    public update(_delta: number): void {
+    public moveCursorFirefly(e: InteractionEvent): void {
+        let globalPos: Point = e.data.global;
+        let localPos: Point = this.mainContainer.toLocal(globalPos);
+
+        let x_off = 20;
+        let y_off = 20;
+
+        this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
 
     public addButtons(): void {

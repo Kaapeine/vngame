@@ -5,7 +5,7 @@ export class Manager {
     private constructor() { /*this class is purely static. No constructor to see here*/ }
 
     // Safely store variables for our game
-    private static app: Application;
+    public static app: Application;
     private static currentScene: IScene;
 
     // Width and Height are read-only after creation (for now)

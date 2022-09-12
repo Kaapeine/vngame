@@ -1,4 +1,4 @@
-import { AnimatedSprite, Container, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Container, InteractionEvent, Point, ParticleContainer, Sprite, Texture } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { SceneOne } from "./SceneOne";
 import { TitleScene } from "./TitleScene";
@@ -22,6 +22,9 @@ export class IntroScene extends Container implements IScene {
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
+
+        this.mainContainer.interactive = true;
+        this.mainContainer.on('pointermove', this.moveFireflies, this);
     }
 
     public addFireflies(): void {
@@ -39,7 +42,7 @@ export class IntroScene extends Container implements IScene {
             let y: number = Math.random() * 700;
             firefly.position.set(x, y);
             firefly.play();
-            firefly.animationSpeed = 0.1;
+            firefly.animationSpeed = 0.05;
 
             this.fireflyArray.push(firefly);
             this.fireflyContainer.addChild(firefly);
@@ -111,14 +114,40 @@ export class IntroScene extends Container implements IScene {
         for (let i = 0; i < this.numFireflies; ++i) {
             const firefly: AnimatedSprite = this.fireflyArray[i];
             if (firefly.x >= 1850 || firefly.x == 0 || firefly.y >= 750 || firefly.y == 0) {
+
+                // RANDOM RESPAWN
                 let x: number = Math.random() * 1800;
                 let y: number = Math.random() * 700;
                 firefly.position.set(x, y);
+
+                // TODO Bounce back
             }
-            firefly.x += Math.random() * 10;
-            firefly.y += Math.random() * 10;
+            firefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+            firefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+        }        
+    }
+
+    public moveFireflies(e: InteractionEvent): void {
+        let pos: Point = e.data.global;
+        let localPos: Point = this.mainContainer.toLocal(pos);
+
+        for (let i = 0; i < this.numFireflies; ++i) {
+            const firefly: AnimatedSprite = this.fireflyArray[i];
+            let dist = this.getDist(localPos, firefly.position);
+            if (dist < 150) {
+                let theta: number = this.getAngle(localPos, firefly.position);
+                firefly.x += 3 * Math.cos(theta);
+                firefly.y += 3 * Math.sin(theta);
+            }
         }
-        
+    }
+
+    public getDist(p1: Point, p2: Point): number {
+        return Math.sqrt((p2.x - p1.x)**2 + (p2.y - p1.y)**2);
+    }
+
+    public getAngle(p1: Point, p2: Point): number {
+        return Math.atan2(p2.y - p1.y, p2.x - p1.x);
     }
 
     public addFrame(): void {
