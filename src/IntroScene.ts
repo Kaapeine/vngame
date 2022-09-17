@@ -1,4 +1,4 @@
-import { AnimatedSprite, Container, InteractionEvent, Point, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Container, InteractionEvent, Point, ParticleContainer, Sprite, Texture, Text, TextStyle } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { SceneOne } from "./SceneOne";
 import { TitleScene } from "./TitleScene";
@@ -7,14 +7,28 @@ export class IntroScene extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private fireflyContainer: ParticleContainer = new ParticleContainer();
+    private revFireflyContainer: ParticleContainer = new ParticleContainer();
     private fireflyArray: Array<AnimatedSprite> = [];
+
     private numFireflies: number = 100;
+
+    // Define ellipse here
+    private textWidth: number = 800; // a third of the frame width
+    private textHeight: number = 300;
+
+    private a1: number = this.textWidth/2; // inner x radius
+    private a2: number = 1626/2;
+
+    private b1: number = this.textHeight/2; // inner y radius
+    private b2: number = 781/2;
 
     constructor() {
         super();
 
         const introBg: Sprite = Sprite.from('intro_scene/Intro.jpg');
         this.mainContainer.addChild(introBg);
+
+        this.addTitle();
 
         this.addFireflies();
 
@@ -27,28 +41,65 @@ export class IntroScene extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveFireflies, this);
     }
 
+    public addTitle(): void {
+        const style = new TextStyle({
+            fill: "white",
+            fontSize: 38,
+            fontWeight: "bold"
+        });
+        const text = new Text('Deep in the Sundarbans...', style);
+        text.position.set(600, 350);
+        this.mainContainer.addChild(text);
+    }
+
     public addFireflies(): void {
+        const fireflyTextureSeq: Array<Texture> = [];
+        const revFireflyTextureSeq: Array<Texture> = [];
+
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
             // console.log(i);
             let tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
 
-        for (let i  = 0; i <= this.numFireflies; ++i) {
-            let firefly: AnimatedSprite = new AnimatedSprite(fireflyTextureSeq);
-            let x: number = Math.random() * 1800;
-            let y: number = Math.random() * 700;
+        const revFireflySeq: Array<string> = ['intro_scene/rev_firefly/RevFirefly-1.png', 'intro_scene/rev_firefly/RevFirefly-2.png', 'intro_scene/rev_firefly/RevFirefly-3.png', 'intro_scene/rev_firefly/RevFirefly-4.png', 'intro_scene/rev_firefly/RevFirefly-5.png'];
+        for (let i = 0; i < revFireflySeq.length; i++){
+            // console.log(i);
+            let tex = Texture.from(revFireflySeq[i]);
+            revFireflyTextureSeq.push(tex);
+        }
+
+        for (let i  = 0; i < this.numFireflies; ++i) {
+            let rnd: number = Math.random();
+            if (rnd < 0.5) {
+                var firefly: AnimatedSprite = new AnimatedSprite(fireflyTextureSeq);
+            }
+            else {
+                var firefly: AnimatedSprite = new AnimatedSprite(revFireflyTextureSeq);
+            }
+            let theta = rnd * Math.PI * 2;
+            // let x: number = Math.random() * 1626;
+            // let y: number = Math.random() * 781;
+            let x: number = (this.a1 + Math.random() * (this.a2 - this.a1)) * Math.cos(theta) + 1626/2;
+            let y: number = (this.b1 + Math.random() * (this.b2 - this.b1)) * Math.sin(theta) + 781/2;
+
             firefly.position.set(x, y);
             firefly.play();
+            // TODO stagger animation
             firefly.animationSpeed = 0.05;
 
             this.fireflyArray.push(firefly);
-            this.fireflyContainer.addChild(firefly);
-        } 
+            if (rnd < 0.5) {
+                this.fireflyContainer.addChild(firefly);
+            }
+            else {
+                this.revFireflyContainer.addChild(firefly);
+            }
+        }
 
         this.mainContainer.addChild(this.fireflyContainer);
+        this.mainContainer.addChild(this.revFireflyContainer);
     }
 
     public addButtons(): void {
@@ -109,18 +160,17 @@ export class IntroScene extends Container implements IScene {
     }
 
     public update(_delta: number): void {
-        // this.leavesAngle += 0.01;
-        // this.leaves.rotation = this.leavesAngle;
         for (let i = 0; i < this.numFireflies; ++i) {
             const firefly: AnimatedSprite = this.fireflyArray[i];
-            if (firefly.x >= 1850 || firefly.x == 0 || firefly.y >= 750 || firefly.y == 0) {
+            if (firefly.x >= 1626 || firefly.x <= 0 || firefly.y >= 781 || firefly.y <= 0) {
 
                 // RANDOM RESPAWN
-                let x: number = Math.random() * 1800;
-                let y: number = Math.random() * 700;
+                let theta: number = Math.random() * Math.PI * 2;
+                let x: number = (this.a1 + Math.random() * (this.a2 - this.a1)) * Math.cos(theta) + 1626/2;
+                let y: number = (this.b1 + Math.random() * (this.b2 - this.b1)) * Math.sin(theta) + 781/2;
                 firefly.position.set(x, y);
 
-                // TODO Bounce back
+                // TODO Bounce
             }
             firefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
             firefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
