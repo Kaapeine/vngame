@@ -7,6 +7,9 @@ export class SceneOne extends Container implements IScene {
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
     private wheat: Sprite;
+    private numClicks: number = 0;
+    private text1: Sprite;
+    private text2: Sprite;
 
     constructor() {
         super();
@@ -53,14 +56,41 @@ export class SceneOne extends Container implements IScene {
         this.mainContainer.interactive = true;
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
+        // setting up text
+        this.text1 = Sprite.from('scene_one/Text1.png');
+        this.text2 = Sprite.from('scene_one/Text2.png');
+
+
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
     }
 
     public showJackal(_event: Event): void {
-        let jackal: Texture = Texture.from('scene_one/jackal.png');
-        this.wheat.texture = jackal;
+        if (this.numClicks == 0) {
+            let jackal: Texture = Texture.from('scene_one/jackal.png');
+            this.wheat.texture = jackal;
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 1) {
+            this.text1.position.set(80, 200);
+            this.mainContainer.addChild(this.text1);
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 2) {
+            this.mainContainer.removeChild(this.text1);
+            this.text2.position.set(720, 45);
+            this.mainContainer.addChild(this.text2);
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 3){
+            this.text2.texture = Texture.from('scene_one/Text3.png');
+            this.numClicks++;
+            return;
+        }
     }
 
     public update(_delta: number): void {
