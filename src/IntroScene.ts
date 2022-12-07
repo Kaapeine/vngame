@@ -1,4 +1,4 @@
-import { AnimatedSprite, Container, InteractionEvent, Point, ParticleContainer, Sprite, Texture, Text, TextStyle } from "pixi.js";
+import { AnimatedSprite, Container, InteractionEvent, Point, ParticleContainer, Sprite, Texture } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { SceneOne } from "./SceneOne";
 import { TitleScene } from "./TitleScene";
@@ -42,14 +42,9 @@ export class IntroScene extends Container implements IScene {
     }
 
     public addTitle(): void {
-        const style = new TextStyle({
-            fill: "white",
-            fontSize: 38,
-            fontWeight: "bold"
-        });
-        const text = new Text('Deep in the Sundarbans...', style);
-        text.position.set(600, 350);
-        this.mainContainer.addChild(text);
+        const introText: Sprite = Sprite.from('intro_scene/intro_text.png');
+        introText.position.set(665, 332);
+        this.mainContainer.addChild(introText);
     }
 
     public addFireflies(): void {
@@ -156,7 +151,8 @@ export class IntroScene extends Container implements IScene {
     }
 
     public goPrev(_event: Event): void {
-        Manager.changeScene(new TitleScene);
+        const prevScene: IScene = new TitleScene();
+        Manager.changeScene(prevScene);
     }
 
     public update(_delta: number): void {

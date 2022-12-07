@@ -17,7 +17,6 @@ export class TitleScene extends Container implements IScene {
 
         this.leaves = Sprite.from('title_screen/Leaves.png');
         this.titleContainer.addChild(this.leaves);
-        this.leaves.pivot.set(this.leaves.width/2, this.leaves.height/2);
 
         const topBg: Sprite = Sprite.from('title_screen/Front.png');
         this.titleContainer.addChild(topBg);

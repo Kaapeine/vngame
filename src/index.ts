@@ -6,9 +6,4 @@ import { SceneOne } from "./SceneOne";
 
 Manager.initialize(1920, 1080, 0xcccccc);
 
-// const titleScene: TitleScene = new TitleScene();
-// Manager.changeScene(titleScene);
-
-// Manager.changeScene(new SceneOne);
-
-Manager.changeScene(new SceneOne);
+Manager.changeScene( new SceneOne);
