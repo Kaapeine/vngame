@@ -1,16 +1,13 @@
-import { Container, Texture, Sprite, Point, InteractionEvent, AnimatedSprite } from "pixi.js";
-import { IntroScene } from "./IntroScene";
+import { Container, Texture, Sprite, AnimatedSprite, InteractionEvent, Point } from "pixi.js";
 import { IScene, Manager } from "./Manager";
-import { SceneTwo } from "./SceneTwo";
+import { SceneOne } from "./SceneOne";
 
-export class SceneOne extends Container implements IScene {
+export class SceneTwo extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
-    private wheat: Sprite;
+    private text: Sprite;
     private numClicks: number = 0;
-    private text1: Sprite;
-    private text2: Sprite;
 
     constructor() {
         super();
@@ -25,31 +22,11 @@ export class SceneOne extends Container implements IScene {
         this.cursorFirefly.play();
         this.cursorFirefly.animationSpeed = 0.05;
 
-        const sceneOneBg = Sprite.from('scene_one/Background.png');
-        this.mainContainer.addChild(sceneOneBg);
-
-        const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
-        let rainTextureSeq: Array<Texture> = [];
-        for (let i = 0; i < rainSeq.length; i++) {
-            let tex = Texture.from(rainSeq[i]);
-            rainTextureSeq.push(tex);
-        }
-        const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
-        rain.play();
-        rain.animationSpeed = 0.12;
-        this.mainContainer.addChild(rain);
-
-        const houseGrass: Sprite = Sprite.from('scene_one/House_Grass.png');
-        this.mainContainer.addChild(houseGrass);
-
-        this.wheat = Sprite.from('scene_one/wheat.png');
-        this.wheat.interactive = true;
-        this.wheat.on('pointerdown', this.showJackal, this);
-        this.mainContainer.addChild(this.wheat);
-
-        const aami = Sprite.from('scene_one/Aami.png');
-        aami.position.set(351, 426);
-        this.mainContainer.addChild(aami);
+        let bgTrees: Sprite = Sprite.from('scene_two/BG_Trees.png');
+        this.mainContainer.addChild(bgTrees);
+        
+        this.addStars();
+        this.addHouses();
 
         this.mainContainer.position.set(150, 150);
 
@@ -57,55 +34,98 @@ export class SceneOne extends Container implements IScene {
         this.mainContainer.interactive = true;
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
-        // setting up text
-        this.text1 = Sprite.from('scene_one/Text1.png');
-        this.text2 = Sprite.from('scene_one/Text2.png');
-
+        // text
+        this.text = Sprite.from('scene_two/Text1.png');
+        this.text.position.set(60, 62);
+        this.mainContainer.on('pointerdown', this.addText, this);
 
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
     }
 
-    public showJackal(_event: Event): void {
+    public addStars(): void {
+        const starSeq: Array<string> = ['scene_two/stars/stars-1.png', 'scene_two/stars/stars-2.png', 'scene_two/stars/stars-3.png'];
+        let starTexSeq: Array<Texture> = [];
+        for (let i = 0; i < starSeq.length; i++) {
+            let tex: Texture = Texture.from(starSeq[i]);
+            starTexSeq.push(tex);
+        }
+        const stars = new AnimatedSprite(starTexSeq);
+        stars.play();
+        stars.animationSpeed = 0.025;
+        this.mainContainer.addChild(stars);
+    }
+
+    public addHouses(): void {
+        let house1: Sprite = Sprite.from('scene_two/House1Closed.png');
+        let house2: Sprite = Sprite.from('scene_two/House2Closed.png');
+        let house3: Sprite = Sprite.from('scene_two/House3Closed.png');
+
+        house1.position.set(69, 515);
+        house2.position.set(543, 524);
+        house3.position.set(1319, 525);
+
+        house1.interactive = true;
+        house1.on('pointerover', () => {
+            house1.texture = Texture.from('scene_two/House1Open.png');
+        })
+        house1.on('pointerout', () => {
+            house1.texture = Texture.from('scene_two/House1Closed.png');
+        })
+        
+        house2.interactive = true;
+        house2.on('pointerover', () => {
+            house2.texture = Texture.from('scene_two/House2Open.png');
+        })
+        house2.on('pointerout', () => {
+            house2.texture = Texture.from('scene_two/House2Closed.png');
+        })
+
+        house3.interactive = true;
+        house3.on('pointerover', () => {
+            house3.position.set(1100, 525);
+            house3.texture = Texture.from('scene_two/House3Open.png');
+        })
+        house3.on('pointerout', () => {
+            house3.position.set(1319, 525);
+            house3.texture = Texture.from('scene_two/House3Closed.png');
+        })
+
+        this.mainContainer.addChild(house1);
+        this.mainContainer.addChild(house2);
+        this.mainContainer.addChild(house3);
+    }   
+
+    public addText(): void {
         if (this.numClicks == 0) {
-            let jackal: Texture = Texture.from('scene_one/jackal.png');
-            this.wheat.texture = jackal;
+            this.mainContainer.addChild(this.text);
             this.numClicks++;
             return;
         }
         if (this.numClicks == 1) {
-            this.text1.position.set(80, 200);
-            this.mainContainer.addChild(this.text1);
+            this.text.texture = Texture.from('scene_two/Text2.png');
             this.numClicks++;
             return;
         }
         if (this.numClicks == 2) {
-            this.mainContainer.removeChild(this.text1);
-            this.text2.position.set(720, 45);
-            this.mainContainer.addChild(this.text2);
+            this.text.texture = Texture.from('scene_two/Text3.png');
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 3){
-            this.text2.texture = Texture.from('scene_one/Text3.png');
-            this.numClicks++;
-            return;
-        }
+    }
+
+    public goNext(_event: Event): void {
+        alert('hi');
+    }
+
+    public goPrev(_event: Event): void {
+        Manager.changeScene(new SceneOne);
     }
 
     public update(_delta: number): void {
         this.cursorFirefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
         this.cursorFirefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-    }
-
-    public goNext(_event: Event): void {
-        const nextScene: IScene = new SceneTwo;
-        Manager.changeScene(nextScene);
-    }
-
-    public goPrev(_event: Event): void {
-        Manager.changeScene(new IntroScene);
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
