@@ -28,16 +28,7 @@ export class SceneOne extends Container implements IScene {
         const sceneOneBg = Sprite.from('scene_one/Background.png');
         this.mainContainer.addChild(sceneOneBg);
 
-        const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
-        let rainTextureSeq: Array<Texture> = [];
-        for (let i = 0; i < rainSeq.length; i++) {
-            let tex = Texture.from(rainSeq[i]);
-            rainTextureSeq.push(tex);
-        }
-        const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
-        rain.play();
-        rain.animationSpeed = 0.12;
-        this.mainContainer.addChild(rain);
+        this.addRain();
 
         const houseGrass: Sprite = Sprite.from('scene_one/House_Grass.png');
         this.mainContainer.addChild(houseGrass);
@@ -65,6 +56,19 @@ export class SceneOne extends Container implements IScene {
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
+    }
+
+    public addRain(): void {
+        const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
+        let rainTextureSeq: Array<Texture> = [];
+        for (let i = 0; i < rainSeq.length; i++) {
+            let tex = Texture.from(rainSeq[i]);
+            rainTextureSeq.push(tex);
+        }
+        const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
+        rain.play();
+        rain.animationSpeed = 0.12;
+        this.mainContainer.addChild(rain);
     }
 
     public showJackal(_event: Event): void {

@@ -8,6 +8,7 @@ export class SceneThree extends Container implements IScene {
     private cursorFirefly: AnimatedSprite;
     private text: Sprite;
     private numClicks: number = 0;
+    private isClickedScene: boolean = false;
 
     constructor() {
         super();
@@ -30,14 +31,14 @@ export class SceneThree extends Container implements IScene {
 
         this.mainContainer.position.set(150, 150);
 
-        this.mainContainer.addChild(this.cursorFirefly);
-        this.mainContainer.interactive = true;
-        this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
-
         // text
         this.text = Sprite.from('scene_three/Text1.png');
         this.text.position.set(60, 62);
         this.mainContainer.on('pointerdown', this.addText, this);
+
+        this.mainContainer.addChild(this.cursorFirefly);
+        this.mainContainer.interactive = true;
+        this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
         this.addFrame();
@@ -91,6 +92,8 @@ export class SceneThree extends Container implements IScene {
             house3.position.set(1319, 525);
             house3.texture = Texture.from('scene_three/House3Closed.png');
         })
+        // switch to scene3_clicked
+        house3.on('pointerdown', this.clickedScene, this);
 
         this.mainContainer.addChild(house1);
         this.mainContainer.addChild(house2);
@@ -98,21 +101,64 @@ export class SceneThree extends Container implements IScene {
     }   
 
     public addText(): void {
-        if (this.numClicks == 0) {
+        if (this.numClicks == 0 && !this.isClickedScene) {
             this.mainContainer.addChild(this.text);
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 1) {
+        if (this.numClicks == 1 && !this.isClickedScene) {
             this.text.texture = Texture.from('scene_three/Text2.png');
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 2) {
+        if (this.numClicks == 2 && !this.isClickedScene) {
             this.text.texture = Texture.from('scene_three/Text3.png');
             this.numClicks++;
             return;
         }
+    }
+
+    public clickedScene(): void {
+        this.mainContainer.removeChildren(0, 3);
+        this.isClickedScene = true;
+
+        const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
+        let fireflyTextureSeq: Array<Texture> = [];
+        for (let i = 0; i < fireflySeq.length; i++){
+            let tex = Texture.from(fireflySeq[i]);
+            fireflyTextureSeq.push(tex);
+        }
+        this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
+
+        this.cursorFirefly.play();
+        this.cursorFirefly.animationSpeed = 0.05;
+
+        this.mainContainer.addChild(this.cursorFirefly);
+        this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
+
+        const background: Sprite = Sprite.from('scene_three/Background.png');
+        this.mainContainer.addChild(background);
+
+        background.interactive = true;
+        background.on('pointerdown', () => {
+            this.text.texture = Texture.from('scene_three/Text 1.png');
+            this.text.position.set(1028, 61);
+            this.mainContainer.addChild(this.text);
+        })
+
+        const aami: Sprite = Sprite.from('scene_three/Aami.png');
+        aami.position.set(122, 337);
+        this.mainContainer.addChild(aami);
+
+        const glow: Sprite = Sprite.from('scene_three/FireGlow.png');
+        glow.position.set(38, 167);
+        this.mainContainer.addChild(glow);
+
+        const flame: AnimatedSprite = AnimatedSprite.fromImages(['scene_three/candle/CandleFire.png', 'scene_three/candle/CandleFire-1.png', 'scene_three/candle/CandleFire-2.png', 'scene_three/candle/CandleFire-3.png']);
+        flame.position.set(260, 400);
+        flame.play();
+        flame.animationSpeed = 0.1;
+        this.mainContainer.addChild(flame);
     }
 
     public goNext(_event: Event): void {
