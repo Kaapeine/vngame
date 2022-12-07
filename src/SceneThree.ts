@@ -1,11 +1,13 @@
-import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene } from "./Manager";
+import { Container, Texture, Sprite, AnimatedSprite, InteractionEvent, Point } from "pixi.js";
+import { IScene, Manager } from "./Manager";
+import { SceneOne } from "./SceneOne";
 
-
-export class SCENENAME extends Container implements IScene {
+export class SceneThree extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
+    private text: Sprite;
+    private numClicks: number = 0;
 
     constructor() {
         super();
@@ -20,23 +22,105 @@ export class SCENENAME extends Container implements IScene {
         this.cursorFirefly.play();
         this.cursorFirefly.animationSpeed = 0.05;
 
+        let bgTrees: Sprite = Sprite.from('scene_three/BG_Trees.png');
+        this.mainContainer.addChild(bgTrees);
+        
+        this.addStars();
+        this.addHouses();
+
         this.mainContainer.position.set(150, 150);
 
         this.mainContainer.addChild(this.cursorFirefly);
         this.mainContainer.interactive = true;
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
+        // text
+        this.text = Sprite.from('scene_three/Text1.png');
+        this.text.position.set(60, 62);
+        this.mainContainer.on('pointerdown', this.addText, this);
+
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
     }
 
+    public addStars(): void {
+        const starSeq: Array<string> = ['scene_three/stars/stars-1.png', 'scene_three/stars/stars-2.png', 'scene_three/stars/stars-3.png'];
+        let starTexSeq: Array<Texture> = [];
+        for (let i = 0; i < starSeq.length; i++) {
+            let tex: Texture = Texture.from(starSeq[i]);
+            starTexSeq.push(tex);
+        }
+        const stars = new AnimatedSprite(starTexSeq);
+        stars.play();
+        stars.animationSpeed = 0.025;
+        this.mainContainer.addChild(stars);
+    }
+
+    public addHouses(): void {
+        let house1: Sprite = Sprite.from('scene_three/House1Closed.png');
+        let house2: Sprite = Sprite.from('scene_three/House2Closed.png');
+        let house3: Sprite = Sprite.from('scene_three/House3Closed.png');
+
+        house1.position.set(69, 515);
+        house2.position.set(543, 524);
+        house3.position.set(1319, 525);
+
+        house1.interactive = true;
+        house1.on('pointerover', () => {
+            house1.texture = Texture.from('scene_three/House1Open.png');
+        })
+        house1.on('pointerout', () => {
+            house1.texture = Texture.from('scene_three/House1Closed.png');
+        })
+        
+        house2.interactive = true;
+        house2.on('pointerover', () => {
+            house2.texture = Texture.from('scene_three/House2Open.png');
+        })
+        house2.on('pointerout', () => {
+            house2.texture = Texture.from('scene_three/House2Closed.png');
+        })
+
+        house3.interactive = true;
+        house3.on('pointerover', () => {
+            house3.position.set(1100, 525);
+            house3.texture = Texture.from('scene_three/House3Open.png');
+        })
+        house3.on('pointerout', () => {
+            house3.position.set(1319, 525);
+            house3.texture = Texture.from('scene_three/House3Closed.png');
+        })
+
+        this.mainContainer.addChild(house1);
+        this.mainContainer.addChild(house2);
+        this.mainContainer.addChild(house3);
+    }   
+
+    public addText(): void {
+        if (this.numClicks == 0) {
+            this.mainContainer.addChild(this.text);
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 1) {
+            this.text.texture = Texture.from('scene_three/Text2.png');
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 2) {
+            this.text.texture = Texture.from('scene_three/Text3.png');
+            this.numClicks++;
+            return;
+        }
+    }
+
     public goNext(_event: Event): void {
         alert('hi');
-        }
+    }
 
     public goPrev(_event: Event): void {
-        alert('hi');
+        Manager.changeScene(new SceneOne);
     }
 
     public update(_delta: number): void {

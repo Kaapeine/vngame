@@ -1,5 +1,5 @@
 - Animate leaves correctly
-- Add a loader
-- Create a scene template
-- Move canvas to remove left and top borders
+- Gray out buttons until all actions are complete
+- How does the player figure out which house is Aami's
+- 
  
