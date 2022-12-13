@@ -1,6 +1,7 @@
 import { Container, Texture, Sprite, AnimatedSprite, InteractionEvent, Point } from "pixi.js";
 import { IScene, Manager } from "./Manager";
-import { SceneOne } from "./SceneOne";
+import { SceneFour } from "./SceneFour";
+import { SceneTwo } from "./SceneTwo";
 
 export class SceneThree extends Container implements IScene {
 
@@ -162,11 +163,13 @@ export class SceneThree extends Container implements IScene {
     }
 
     public goNext(_event: Event): void {
-        alert('hi');
+        const nextScene: IScene = new SceneFour;
+        Manager.changeScene(nextScene);
     }
 
     public goPrev(_event: Event): void {
-        Manager.changeScene(new SceneOne);
+        const prevScene: IScene = new SceneTwo;
+        Manager.changeScene(prevScene);
     }
 
     public update(_delta: number): void {
