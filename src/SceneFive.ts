@@ -1,42 +1,48 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { dragSprite } from "./lib";
 import { IScene, Manager } from "./Manager";
-import { SceneFive } from "./SceneFive";
-import { SceneThree } from "./SceneThree";
-// import { checkCollision } from "./lib";
+import { SceneFour } from "./SceneFour";
 
-export class SceneFour extends Container implements IScene {
+
+export class SceneFive extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
-    private numClicks: number = 0;
     private text: Sprite;
-    private ingreds: Boolean = false;
-    private meal: Sprite;
+    private ojackal: Sprite;
+    private callJackal: Sprite;
+    private numClicks: number = 0;
 
     constructor() {
         super();
 
-        let bg: Sprite = Sprite.from('scene_four/Background.png');
+        let bg: Sprite = Sprite.from('scene_five/Background.png');
         this.mainContainer.addChild(bg);
 
-        this.addIngredients();
+        let grass: Sprite = Sprite.from('scene_five/Grass.png');
+        grass.position.set(0, 655);
+        this.mainContainer.addChild(grass);
+        
+        let aami: Sprite = Sprite.from('scene_five/Aami and Plate.png');
+        aami.position.set(180, 350);
+        this.mainContainer.addChild(aami);
 
-        let fire: AnimatedSprite = AnimatedSprite.fromImages(['scene_four/fire/KitchenFire-2.png', 'scene_four/fire/KitchenFire-3.png', 'scene_four/fire/KitchenFire-1.png']);
-        fire.position.set(299, 590);
-        fire.play();
-        fire.animationSpeed = 0.05;
-        this.mainContainer.addChild(fire);
-
-        this.meal = Sprite.from('scene_four/Meal.png');
-        this.meal.position.set(672, 256);
+        this.addJackal();
 
         // TEXT
-        this.mainContainer.on('pointerdown', this.showText, this);
-        this.text = Sprite.from('scene_four/Text 1.png');
+        this.callJackal = Sprite.from('scene_five/CLICK ON THE JACKAL TO CALL HIM.png');
+        this.callJackal.position.set(1253, 735);
+        this.mainContainer.addChild(this.callJackal);
+
+        this.text = Sprite.from('scene_five/Text 1.png');
+        this.ojackal = Sprite.from('scene_five/ojackal.png');
+
+        this.text.position.set(943, 321);
+        this.mainContainer.addChild(this.text);
+
+        this.ojackal.position.set(946, 397);
+        this.mainContainer.addChild(this.ojackal);
 
         // FOOTER
-
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
@@ -58,82 +64,53 @@ export class SceneFour extends Container implements IScene {
         this.addButtons();
     }
 
-    public showText(): void {
-        if (this.numClicks == 0) {
-            this.text.position.set(737, 37);
-            this.mainContainer.addChild(this.text);
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks == 1) {
-            this.text.texture = Texture.from('scene_four/Text 2.png');
-            this.text.position.set(787, 37);
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks == 2) {
-            this.text.texture = Texture.from('scene_four/DRAG INGRIDIENTS INTO THE POT.png');
-            this.text.position.set(1279, 735);
-            this.numClicks++;
-            this.ingreds = true;
-            return;
-        }
-    }
+    public addJackal(): void {
+        let jackal: Sprite = Sprite.from('scene_five/Jackal1.png');
+        jackal.position.set(1399, 512);
+        this.mainContainer.addChild(jackal);
+        jackal.interactive = true;
 
-    public addIngredients(): void {
-        let pot: Sprite = Sprite.from('scene_four/pot.png');
-        pot.position.set(285, 505);
-        this.mainContainer.addChild(pot);
-        pot.visible = false;
+        jackal.on('pointerdown', () => {
+            if (this.numClicks == 0) {
+                jackal.texture = Texture.from('scene_five/Jackal2.png');
+                jackal.position.set(908, 556);
 
-        let spice: dragSprite = new dragSprite('scene_four/Spice.png', this.mainContainer, pot);
-        spice.sprite.position.set(576, 638);
-        this.mainContainer.addChild(spice.sprite);
+                this.mainContainer.removeChild(this.ojackal);
 
-        let coconutmilk: dragSprite = new dragSprite('scene_four/Coconut Milk.png', this.mainContainer, pot);
-        coconutmilk.sprite.position.set(703, 588);
-        this.mainContainer.addChild(coconutmilk.sprite);
+                this.text.texture = Texture.from('scene_five/Text 2.png');
+                this.text.position.set(943, 320);
 
-        let dryfruit: dragSprite = new dragSprite('scene_four/Dry Fruits.png', this.mainContainer, pot);
-        dryfruit.sprite.position.set(785, 665);
-        this.mainContainer.addChild(dryfruit.sprite);
+                this.callJackal.texture = Texture.from('scene_five/CLICK AGAIN!.png');
+                this.callJackal.position.set(1468, 735);
 
-        let rice: dragSprite = new dragSprite('scene_four/Rice.png', this.mainContainer, pot);
-        rice.sprite.position.set(880, 609);
-        this.mainContainer.addChild(rice.sprite);
+                this.numClicks++;
+            }
+            else if (this.numClicks == 1) {
+                jackal.texture = Texture.from('scene_five/Jackal3.png');
+                jackal.position.set(448, 549);
 
-        let honey: dragSprite = new dragSprite('scene_four/Honey.png', this.mainContainer, pot);
-        honey.sprite.position.set(703, 617);
-        this.mainContainer.addChild(honey.sprite);
+                this.mainContainer.removeChild(this.callJackal);
+
+                this.text.texture = Texture.from('scene_five/Text 3.png');
+                this.text.position.set(943, 319);
+                
+                this.numClicks++;
+            }
+        })
     }
 
     public goNext(_event: Event): void {
-        let nextScene: IScene = new SceneFive;
-        Manager.changeScene(nextScene);
+        alert('hi');
     }
 
     public goPrev(_event: Event): void {
-        let prevScene: IScene = new SceneThree;
+        let prevScene: IScene = new SceneFour;
         Manager.changeScene(prevScene);
     }
 
     public update(_delta: number): void {
         this.cursorFirefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
         this.cursorFirefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-        console.log(this.mainContainer.children.length);
-        if (this.ingreds && this.mainContainer.children.length == 9) {
-            let smoke: AnimatedSprite = AnimatedSprite.fromImages(['scene_four/smoke/KitchenSmoke-1.png', 'scene_four/smoke/KitchenSmoke-2.png', 'scene_four/smoke/KitchenSmoke-3.png', 'scene_four/smoke/KitchenSmoke-4.png']);
-            smoke.position.set(301, 438);
-            smoke.play();
-            smoke.animationSpeed = 0.05;
-            this.mainContainer.addChild(smoke);
-            this.ingreds = false;
-        }
-
-        if (this.mainContainer.children.length == 6) {
-            this.mainContainer.addChild(this.meal);
-        }
-
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
