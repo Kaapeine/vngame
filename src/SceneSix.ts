@@ -1,17 +1,42 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene } from "./Manager";
+import { IScene, Manager } from "./Manager";
+import { SceneFive } from "./SceneFive";
+import { SceneSeven } from "./SceneSeven";
 
 
-export class SCENENAME extends Container implements IScene {
+export class SceneSix extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
+    private overlay: Sprite;
+    private text: Sprite;
+    private numClicks: number = 0;
 
     constructor() {
         super();
 
-        let bg: Sprite
+        let bg: Sprite = Sprite.from('scene_six/Background.png');
+        this.mainContainer.addChild(bg);
 
+        this.overlay = Sprite.from('scene_six/Overlay with Text 1.png');
+        this.mainContainer.addChild(this.overlay);
+
+        let glow: Sprite = Sprite.from('scene_six/Glow.png');
+        glow.position.set(975, 80);
+        this.mainContainer.addChild(glow);
+
+        let soul: AnimatedSprite = AnimatedSprite.fromImages(['scene_six/soul/Scene6Soul1.png', 'scene_six/soul/Scene6Soul2.png', 'scene_six/soul/Scene6Soul3.png', 'scene_six/soul/Scene6Soul4.png']);
+        soul.position.set(1057, 165);
+        soul.play();
+        soul.animationSpeed = 0.05;
+        this.mainContainer.addChild(soul);
+
+        // TEXT
+        this.text = Sprite.from('scene_six/Text 1.png');
+        this.text.position.set(36, 505);
+        this.mainContainer.addChild(this.text);
+
+        this.mainContainer.on('pointerdown', this.addText, this);
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
@@ -35,12 +60,22 @@ export class SCENENAME extends Container implements IScene {
         this.addButtons();
     }
 
-    public goNext(_event: Event): void {
-        alert('hi');
+    public addText(): void {
+        if (this.numClicks == 0) {
+            this.mainContainer.removeChild(this.overlay);
+            this.text.texture = Texture.from('scene_six/Text2.png');
+            this.text.position.set(36, 313);
         }
+    }
+
+    public goNext(_event: Event): void {
+        let nextScene: IScene = new SceneSeven;
+        Manager.changeScene(nextScene);
+    }
 
     public goPrev(_event: Event): void {
-        alert('hi');
+        let prevScene: IScene = new SceneFive;
+        Manager.changeScene(prevScene);
     }
 
     public update(_delta: number): void {
