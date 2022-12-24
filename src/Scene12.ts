@@ -2,14 +2,66 @@ import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } f
 import { IScene } from "./Manager";
 
 
-export class SCENENAME extends Container implements IScene {
+export class Scene12 extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
 
+    private goddess: Sprite = new Sprite();
+
+    private text1: Sprite = new Sprite();
+    private instructions: Sprite = new Sprite();
+    private numClicks: number = 0;
+
+    private enableLake: boolean = false;
+
     constructor() {
         super();
 
+        let bg: Sprite = Sprite.from('scene_12/Background.png');
+        this.mainContainer.addChild(bg);
+
+        let clearWater: Sprite = Sprite.from('scene_12/Clear Water (hidden).png');
+        clearWater.position.set(0, 462);
+        this.mainContainer.addChild(clearWater);
+        clearWater.visible = false;
+
+        let trees: Sprite = Sprite.from('scene_12/Trees.png');
+        this.mainContainer.addChild(trees);
+
+        let aami: Sprite = Sprite.from('scene_12/Aami.png');
+        aami.position.set(562, 338);
+        this.mainContainer.addChild(aami);
+
+        this.goddess.texture = Texture.from('scene_12/Goddess.png');
+        this.goddess.position.set(695, 1);
+        this.mainContainer.addChild(this.goddess);
+
+        let lake: Sprite = Sprite.from('scene_12/Lake.png');
+        lake.position.set(0, 568);
+        this.mainContainer.addChild(lake);
+        lake.interactive = true;
+        lake.on('pointerdown', () => {
+            if (this.enableLake == true) {
+                clearWater.visible = true;
+                lake.visible = false;
+
+                this.text1.texture = Texture.from('scene_12/Text3.png');
+                this.text1.position.set(124, 190);
+
+                this.instructions.texture = Texture.from('scene_12/Text4.png');
+                this.instructions.position.set(851, 190);
+                
+                this.mainContainer.removeChild(this.goddess);
+            }
+        })
+
+        // TEXT
+        this.text1.texture = Texture.from('scene_12/Text1.png');
+
+        this.mainContainer.on('pointerdown', this.addText, this);
+
+        // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
@@ -29,6 +81,28 @@ export class SCENENAME extends Container implements IScene {
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();
+    }
+
+    public addText(): void {
+        if (this.numClicks == 0) {
+            this.text1.position.set(263, 621);
+            this.mainContainer.addChild(this.text1);
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 1) {
+            this.text1.position.set(265, 606);
+            this.text1.texture = Texture.from('scene_12/Text2.png');
+    
+            this.instructions.texture = Texture.from('scene_12/click.png');
+            this.instructions.position.set(1205, 547);
+            this.mainContainer.addChild(this.instructions);
+
+            this.enableLake = true;
+
+            this.numClicks++;
+            return;
+        }
     }
 
     public goNext(_event: Event): void {
