@@ -1,65 +1,27 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene, Manager } from "./Manager";
-import { Scene11 } from "./Scene11";
-import { Scene13 } from "./Scene13";
+import { IScene } from "./Manager";
 
 
-export class Scene12 extends Container implements IScene {
+export class Scene13 extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
 
-    private goddess: Sprite = new Sprite();
-
-    private text1: Sprite = new Sprite();
-    private instructions: Sprite = new Sprite();
     private numClicks: number = 0;
-
-    private enableLake: boolean = false;
 
     constructor() {
         super();
 
-        let bg: Sprite = Sprite.from('scene_12/Background.png');
+        let bg: Sprite = Sprite.from('scene_13/Background.png');
+        bg.position.set(0, -150);
         this.mainContainer.addChild(bg);
 
-        let clearWater: Sprite = Sprite.from('scene_12/Clear Water (hidden).png');
-        clearWater.position.set(0, 462);
-        this.mainContainer.addChild(clearWater);
-        clearWater.visible = false;
-
-        let trees: Sprite = Sprite.from('scene_12/Trees.png');
-        this.mainContainer.addChild(trees);
-
-        let aami: Sprite = Sprite.from('scene_12/Aami.png');
-        aami.position.set(562, 338);
-        this.mainContainer.addChild(aami);
-
-        this.goddess.texture = Texture.from('scene_12/Goddess.png');
-        this.goddess.position.set(695, 1);
-        this.mainContainer.addChild(this.goddess);
-
-        let lake: Sprite = Sprite.from('scene_12/Lake.png');
-        lake.position.set(0, 568);
-        this.mainContainer.addChild(lake);
-        lake.interactive = true;
-        lake.on('pointerdown', () => {
-            if (this.enableLake == true) {
-                clearWater.visible = true;
-                lake.visible = false;
-
-                this.text1.texture = Texture.from('scene_12/Text3.png');
-                this.text1.position.set(124, 190);
-
-                this.instructions.texture = Texture.from('scene_12/Text4.png');
-                this.instructions.position.set(851, 190);
-                
-                this.mainContainer.removeChild(this.goddess);
-            }
-        })
-
-        // TEXT
-        this.text1.texture = Texture.from('scene_12/Text1.png');
+        let glow: AnimatedSprite = AnimatedSprite.fromImages(['scene_13/glow/Scene13GoddessGlow1.png', 'scene_13/glow/Scene13GoddessGlow2.png', 'scene_13/glow/Scene13GoddessGlow3.png', 'scene_13/glow/Scene13GoddessGlow4.png'])
+        glow.play();
+        glow.animationSpeed = 0.05;
+        glow.position.set(0, 104-80);
+        glow.scale.set(1.01, 1.01);
+        this.mainContainer.addChild(glow);
 
         this.mainContainer.on('pointerdown', this.addText, this);
 
@@ -82,39 +44,37 @@ export class Scene12 extends Container implements IScene {
 
         this.addChild(this.mainContainer);
         this.addFrame();
+
+        let malati: Sprite = Sprite.from('scene_13/Malati.png');
+        malati.position.set(378+150, 0);
+        this.addChild(malati);
+
         this.addButtons();
     }
 
     public addText(): void {
         if (this.numClicks == 0) {
-            this.text1.position.set(263, 621);
-            this.mainContainer.addChild(this.text1);
+            let text1: Sprite = Sprite.from('scene_13/Text1.png');
+            text1.position.set(36, 319-150);
+            this.mainContainer.addChild(text1);
             this.numClicks++;
             return;
         }
         if (this.numClicks == 1) {
-            this.text1.position.set(265, 606);
-            this.text1.texture = Texture.from('scene_12/Text2.png');
-    
-            this.instructions.texture = Texture.from('scene_12/click.png');
-            this.instructions.position.set(1205, 547);
-            this.mainContainer.addChild(this.instructions);
-
-            this.enableLake = true;
-
+            let text1: Sprite = Sprite.from('scene_13/Text2.png');
+            text1.position.set(1145, 667-120);
+            this.mainContainer.addChild(text1);
             this.numClicks++;
             return;
         }
     }
 
     public goNext(_event: Event): void {
-        let nextScene: IScene = new Scene13;
-        Manager.changeScene(nextScene);
+        alert('hi');
     }
 
     public goPrev(_event: Event): void {
-        let prevScene: IScene = new Scene11;
-        Manager.changeScene(prevScene);
+        alert('hi');
     }
 
     public update(_delta: number): void {
