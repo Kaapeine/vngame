@@ -1,85 +1,15 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene, Manager } from "./Manager";
-import { Scene10 } from "./Scene10";
-import { Scene8 } from "./Scene8";
+import { IScene } from "./Manager";
 
 
-export class Scene9 extends Container implements IScene {
+export class SCENENAME extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
 
-    private text: Sprite = new Sprite();
-    private hover: Sprite = new Sprite();
-
-    private numClicks: number = 0;
-
-    private tiger: Sprite = new Sprite();
-
-
     constructor() {
         super();
 
-        let bg: Sprite = Sprite.from('scene_9/Background.png');
-        this.mainContainer.addChild(bg);
-
-        let aami: Sprite = Sprite.from('scene_9/Aami.png');
-        aami.position.set(614, 38);
-        this.mainContainer.addChild(aami);
-
-        this.tiger.texture = Texture.from('scene_9/Weak.png');
-        this.tiger.position.set(615, 5);
-        this.mainContainer.addChild(this.tiger);
-
-        // HERBS
-        let kalmegh: Sprite = Sprite.from('scene_9/Kalmegh.png');
-        kalmegh.position.set(1106, 660);
-        this.mainContainer.addChild(kalmegh);
-        kalmegh.interactive = true;
-        kalmegh.on('pointerover', () => {
-            kalmegh.texture = Texture.from('scene_9/Kalmegh Hovered.png');
-            kalmegh.position.set(1013, 533);
-        })
-        kalmegh.on('pointerout', () => {
-            kalmegh.texture = Texture.from('scene_9/Kalmegh.png');
-            kalmegh.position.set(1106, 660);
-        })
-
-        let titaphul: Sprite = Sprite.from('scene_9/Titaphul.png');
-        titaphul.position.set(1176, 595);
-        this.mainContainer.addChild(titaphul);
-        titaphul.interactive = true;
-        titaphul.on('pointerover', () => {
-            titaphul.texture = Texture.from('scene_9/Titaphul hovered.png');
-            titaphul.position.set(1154, 458);
-        })
-        titaphul.on('pointerout', () => {
-            titaphul.texture = Texture.from('scene_9/Titaphul.png');
-            titaphul.position.set(1176, 595);
-        })
-
-        let nonatenga: Sprite = Sprite.from('scene_9/Nona tenga.png');
-        nonatenga.position.set(1365, 665);
-        this.mainContainer.addChild(nonatenga);
-        nonatenga.interactive = true;
-        nonatenga.on('pointerover', () => {
-            nonatenga.texture = Texture.from('scene_9/Noga tenga Hovered.png');
-            nonatenga.position.set(1304, 542);
-        })
-        nonatenga.on('pointerout', () => {
-            nonatenga.texture = Texture.from('scene_9/Nona tenga.png');
-            nonatenga.position.set(1365, 665);
-        })
-
-
-        // TEXT
-        this.text.texture = Texture.from('scene_9/Text 1.png');
-        this.hover.texture = Texture.from('scene_9/hover.png');
-        this.mainContainer.on('pointerdown', this.addText, this);
-        this.addText();
-
-
-        // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
@@ -101,36 +31,12 @@ export class Scene9 extends Container implements IScene {
         this.addButtons();
     }
 
-    public addText(): void {
-        if (this.numClicks == 0) {
-            this.text.position.set(36, 98);
-            this.hover.position.set(36, 732);
-            this.mainContainer.addChild(this.text);
-            this.mainContainer.addChild(this.hover);
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks == 1) {
-            this.mainContainer.removeChild(this.hover);
-            this.text.texture = Texture.from('scene_9/Text 2.png');
-            this.text.position.set(36, 99);
-
-            this.tiger.texture = Texture.from('scene_9/Strong.png');
-            this.tiger.position.set(920, 5);
-
-            this.numClicks++;
-            return;
-        }
-    }
-
     public goNext(_event: Event): void {
-        let nextScene: IScene = new Scene10;
-        Manager.changeScene(nextScene);
-    }
+        alert('hi');
+        }
 
     public goPrev(_event: Event): void {
-        let prevScene: IScene = new Scene8;
-        Manager.changeScene(prevScene);
+        alert('hi');
     }
 
     public update(_delta: number): void {

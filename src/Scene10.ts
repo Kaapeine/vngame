@@ -1,5 +1,7 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene } from "./Manager";
+import { IScene, Manager } from "./Manager";
+import { Scene11 } from "./Scene11";
+import { Scene9 } from "./Scene9";
 
 
 export class Scene10 extends Container implements IScene {
@@ -60,11 +62,13 @@ export class Scene10 extends Container implements IScene {
     }
 
     public goNext(_event: Event): void {
-        alert('hi');
-        }
+        let nextScene: IScene = new Scene11;
+        Manager.changeScene(nextScene);
+    }
 
     public goPrev(_event: Event): void {
-        alert('hi');
+        let prevScene: IScene = new Scene9;
+        Manager.changeScene(prevScene);
     }
 
     public update(_delta: number): void {
