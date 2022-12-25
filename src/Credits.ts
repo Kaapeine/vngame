@@ -1,40 +1,48 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
+import { EndScene } from "./EndScene";
 import { IScene, Manager } from "./Manager";
-import { Scene15 } from "./Scene15";
-import { Scene17 } from "./Scene17";
 
-export class Scene16 extends Container implements IScene {
+
+export class Credits extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
 
-    private dialogue: Sprite;
-
-    private text: Sprite = new Sprite();
     private numClicks: number = 0;
 
     constructor() {
         super();
 
-        let bg: Sprite = Sprite.from('scene_16/Background.png');
+        let bg: Sprite = Sprite.from('credits/Background.png');
         this.mainContainer.addChild(bg);
 
-        this.addRain();
+        let layer1: Sprite = Sprite.from('credits/Text2 copy 3.png');
+        let layer2: Sprite = Sprite.from('credits/Text2 copy 4.png');
+        let layer3: Sprite = Sprite.from('credits/Text2 copy 5.png');
 
-        let wheat: Sprite = Sprite.from('scene_16/Wheat.png');
-        wheat.position.set(823, 286);
-        this.mainContainer.addChild(wheat);
+        this.mainContainer.on('pointerdown', () => {
+            if (this.numClicks == 0) {
+                layer1.position.set(696, 256);
+                this.mainContainer.addChild(layer1);
+                this.numClicks++;
+                return;
+            }
+            if (this.numClicks == 1) {
+                this.mainContainer.removeChild(layer1);
+                layer2.position.set(725, 342);
+                this.mainContainer.addChild(layer2);
+                this.numClicks++;
+                return;
+            }
+            if (this.numClicks == 2) {
+                this.mainContainer.removeChild(layer2);
+                layer3.position.set(695, 266);
+                this.mainContainer.addChild(layer3);
+                this.numClicks++;
+                return;
+            }
+        })
 
-        this.dialogue = Sprite.from('scene_16/Dialogue.png');
-        this.dialogue.position.set(567, 0);
-        this.mainContainer.addChild(this.dialogue);
-
-        let aami: Sprite = Sprite.from('scene_16/Aami & Jackal.png');
-        aami.position.set(0, 258);
-        this.mainContainer.addChild(aami);
-
-        // TEXT
-        this.mainContainer.on('pointerdown', this.addText, this);
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
@@ -58,44 +66,11 @@ export class Scene16 extends Container implements IScene {
         this.addButtons();
     }
 
-    public addText(): void {
-        if (this.numClicks == 0) {
-            this.text.texture = Texture.from('scene_16/Text1.png');
-            this.text.position.set(928, 187);
-            this.mainContainer.addChild(this.text);
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks == 1) {
-            this.text.texture = Texture.from('scene_16/Text2.png');
-            this.text.position.set(889, 62);
-            this.mainContainer.removeChild(this.dialogue);
-            this.mainContainer.addChild(this.text);
-            this.numClicks++;
-            return;
-        }
-    }
-
-    public addRain(): void {
-        const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
-        let rainTextureSeq: Array<Texture> = [];
-        for (let i = 0; i < rainSeq.length; i++) {
-            let tex = Texture.from(rainSeq[i]);
-            rainTextureSeq.push(tex);
-        }
-        const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
-        rain.play();
-        rain.animationSpeed = 0.12;
-        this.mainContainer.addChild(rain);
-    }
-
     public goNext(_event: Event): void {
-        const nextScene: IScene = new Scene17;
-        Manager.changeScene(nextScene);
     }
 
     public goPrev(_event: Event): void {
-        const prevScene: IScene = new Scene15;
+        const prevScene: IScene = new EndScene;
         Manager.changeScene(prevScene);
     }
 
@@ -115,27 +90,27 @@ export class Scene16 extends Container implements IScene {
     }
 
     public addButtons(): void {
-        const rButton = new Sprite();
-        const rButtonDefault = Texture.from('rbutton/Forward.png');
-        const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
-        const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
+        // const rButton = new Sprite();
+        // const rButtonDefault = Texture.from('rbutton/Forward.png');
+        // const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
+        // const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
 
-        rButton.texture = rButtonDefault;
-        rButton.position.set(1800, 960);
+        // rButton.texture = rButtonDefault;
+        // rButton.position.set(1800, 960);
         
         // interactivity
-        rButton.buttonMode = true;
-        rButton.interactive = true;
-        rButton.on('pointerover', (_event) => {
-            rButton.texture = rButtonHover;
-        });
-        rButton.on('pointerout', (_event) => {
-            rButton.texture = rButtonDefault;
-        })
-        rButton.on('pointerdown', (_event) => {
-            rButton.texture = rButtonClicked;
-            this.goNext(_event);
-        });
+        // rButton.buttonMode = true;
+        // rButton.interactive = true;
+        // rButton.on('pointerover', (_event) => {
+        //     rButton.texture = rButtonHover;
+        // });
+        // rButton.on('pointerout', (_event) => {
+        //     rButton.texture = rButtonDefault;
+        // })
+        // rButton.on('pointerdown', (_event) => {
+        //     rButton.texture = rButtonClicked;
+        //     this.goNext(_event);
+        // });
 
         const lButton = new Sprite();
         const lButtonDefault = Texture.from('lbutton/Back.png');
@@ -159,7 +134,7 @@ export class Scene16 extends Container implements IScene {
             this.goPrev(_event);
         });
 
-        this.addChild(rButton);
+        // this.addChild(rButton);
         this.addChild(lButton);
     }
 

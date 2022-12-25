@@ -1,5 +1,7 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene } from "./Manager";
+import { EndScene } from "./EndScene";
+import { IScene, Manager } from "./Manager";
+import { Scene16 } from "./Scene16";
 
 
 export class Scene17 extends Container implements IScene {
@@ -83,7 +85,7 @@ export class Scene17 extends Container implements IScene {
 
             this.jackal.texture = Texture.from('scene_17/Jackal2.png');
             this.jackal.position.set(662, 652);
-            
+
             this.numClicks++;
             return;
         }
@@ -103,11 +105,13 @@ export class Scene17 extends Container implements IScene {
     }
 
     public goNext(_event: Event): void {
-        alert('hi');
-        }
+        const nextScene: IScene = new EndScene;
+        Manager.changeScene(nextScene);
+    }
 
     public goPrev(_event: Event): void {
-        alert('hi');
+        const prevScene: IScene = new Scene16;
+        Manager.changeScene(prevScene);
     }
 
     public update(_delta: number): void {

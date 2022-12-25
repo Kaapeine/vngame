@@ -1,7 +1,7 @@
 import { AnimatedSprite, Container, InteractionEvent, Point, ParticleContainer, Sprite, Texture } from "pixi.js";
+import { Credits } from "./Credits";
 import { IScene, Manager } from "./Manager";
-import { SceneOne } from "./SceneOne";
-import { TitleScene } from "./TitleScene";
+import { Scene17 } from "./Scene17";
 
 export class EndScene extends Container implements IScene {
 
@@ -42,9 +42,11 @@ export class EndScene extends Container implements IScene {
     }
 
     public addTitle(): void {
-        const introText: Sprite = Sprite.from('intro_scene/intro_text.png');
-        introText.position.set(665, 332);
-        this.mainContainer.addChild(introText);
+        let end: AnimatedSprite = AnimatedSprite.fromImages(['end/TheEnd1.png', 'end/TheEnd2.png', 'end/TheEnd3.png']);
+        end.play();
+        end.animationSpeed = 0.05;
+        end.position.set(726, 347);
+        this.mainContainer.addChild(end);
     }
 
     public addFireflies(): void {
@@ -147,11 +149,11 @@ export class EndScene extends Container implements IScene {
     }
 
     public goNext(_event: Event): void {
-        Manager.changeScene(new SceneOne);
+        Manager.changeScene(new Credits);
     }
 
     public goPrev(_event: Event): void {
-        const prevScene: IScene = new TitleScene();
+        const prevScene: IScene = new Scene17;
         Manager.changeScene(prevScene);
     }
 
