@@ -1,33 +1,20 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
-import { Scene12 } from "./Scene12";
 import { Scene14 } from "./Scene14";
+import { Scene16 } from "./Scene16";
 
 
-export class Scene13 extends Container implements IScene {
+export class Scene15 extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
-
+    private text1: Sprite;
+    private text2: Sprite;
     private numClicks: number = 0;
 
     constructor() {
         super();
 
-        let bg: Sprite = Sprite.from('scene_13/Background.png');
-        bg.position.set(0, -150);
-        this.mainContainer.addChild(bg);
-
-        let glow: AnimatedSprite = AnimatedSprite.fromImages(['scene_13/glow/Scene13GoddessGlow1.png', 'scene_13/glow/Scene13GoddessGlow2.png', 'scene_13/glow/Scene13GoddessGlow3.png', 'scene_13/glow/Scene13GoddessGlow4.png'])
-        glow.play();
-        glow.animationSpeed = 0.05;
-        glow.position.set(0, 104-80);
-        glow.scale.set(1.01, 1.01);
-        this.mainContainer.addChild(glow);
-
-        this.mainContainer.on('pointerdown', this.addText, this);
-
-        // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
@@ -38,46 +25,79 @@ export class Scene13 extends Container implements IScene {
         this.cursorFirefly.play();
         this.cursorFirefly.animationSpeed = 0.05;
 
+        const background: Sprite = Sprite.from('scene_two/Background.png');
+        this.mainContainer.addChild(background);
+
+        this.addRain();
+
+        const grass: Sprite = Sprite.from('scene_two/Grass.png');
+        grass.position.set(0, 580);
+        this.mainContainer.addChild(grass);
+
+        const pillars: Sprite = Sprite.from('scene_two/Pillars.png');
+        pillars.position.set(38, 0);
+        this.mainContainer.addChild(pillars);
+
+        const aami: Sprite = Sprite.from('scene_two/Aami.png');
+        aami.position.set(253, 399);
+        this.mainContainer.addChild(aami);
+
+        const jackal: Sprite = Sprite.from('scene_two/Jackal.png');
+        jackal.position.set(533, 425);
+        this.mainContainer.addChild(jackal);
+
+        this.text1 = Sprite.from('scene_15/Text 1.png');
+        this.text2 = Sprite.from('scene_15/Text 2.png');
+
+        // FOOTER
         this.mainContainer.position.set(150, 150);
 
         this.mainContainer.addChild(this.cursorFirefly);
         this.mainContainer.interactive = true;
+        this.mainContainer.on('pointerdown', this.showText, this);
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
         this.addFrame();
-
-        let malati: Sprite = Sprite.from('scene_13/Malati.png');
-        malati.position.set(378+150, 0);
-        this.addChild(malati);
-
         this.addButtons();
     }
 
-    public addText(): void {
+    public addRain(): void {
+        const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
+        let rainTextureSeq: Array<Texture> = [];
+        for (let i = 0; i < rainSeq.length; i++) {
+            let tex = Texture.from(rainSeq[i]);
+            rainTextureSeq.push(tex);
+        }
+        const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
+        rain.play();
+        rain.animationSpeed = 0.12;
+        this.mainContainer.addChild(rain);
+    }
+
+    public showText(): void {
         if (this.numClicks == 0) {
-            let text1: Sprite = Sprite.from('scene_13/Text1.png');
-            text1.position.set(36, 319-150);
-            this.mainContainer.addChild(text1);
+            this.text1.position.set(897, 36);
+            this.mainContainer.addChild(this.text1);
             this.numClicks++;
             return;
         }
         if (this.numClicks == 1) {
-            let text1: Sprite = Sprite.from('scene_13/Text2.png');
-            text1.position.set(1145, 667-120);
-            this.mainContainer.addChild(text1);
+            this.mainContainer.removeChild(this.text1);
+            this.text2.position.set(808, 163);
+            this.mainContainer.addChild(this.text2);
             this.numClicks++;
             return;
         }
     }
 
     public goNext(_event: Event): void {
-        let nextScene: IScene = new Scene14;
+        const nextScene: IScene = new Scene16;
         Manager.changeScene(nextScene);
     }
 
     public goPrev(_event: Event): void {
-        let prevScene: IScene = new Scene12;
+        const prevScene: IScene = new Scene14;
         Manager.changeScene(prevScene);
     }
 
