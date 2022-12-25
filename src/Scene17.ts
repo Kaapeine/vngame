@@ -1,12 +1,13 @@
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene } from "./Manager";
 
-export class Scene16 extends Container implements IScene {
+
+export class Scene17 extends Container implements IScene {
 
     private mainContainer: Container = new Container();
     private cursorFirefly: AnimatedSprite;
 
-    private dialogue: Sprite;
+    private jackal: Sprite = new Sprite();
 
     private text: Sprite = new Sprite();
     private numClicks: number = 0;
@@ -14,22 +15,28 @@ export class Scene16 extends Container implements IScene {
     constructor() {
         super();
 
-        let bg: Sprite = Sprite.from('scene_16/Background.png');
+        let bg: Sprite = Sprite.from('scene_17/Background.png');
         this.mainContainer.addChild(bg);
 
         this.addRain();
 
-        let wheat: Sprite = Sprite.from('scene_16/Wheat.png');
-        wheat.position.set(823, 286);
+        let wheat: Sprite = Sprite.from('scene_17/Layer 6.png');
+        wheat.position.set(0, 557);
         this.mainContainer.addChild(wheat);
 
-        this.dialogue = Sprite.from('scene_16/Dialogue.png');
-        this.dialogue.position.set(567, 0);
-        this.mainContainer.addChild(this.dialogue);
 
-        let aami: Sprite = Sprite.from('scene_16/Aami & Jackal.png');
-        aami.position.set(0, 258);
+        this.jackal.texture = Texture.from('scene_17/Jackal1.png');
+        this.jackal.position.set(687, 574);
+        this.mainContainer.addChild(this.jackal);
+
+        let aami: Sprite = Sprite.from('scene_17/Aami.png');
+        aami.position.set(838, 578);
         this.mainContainer.addChild(aami);
+
+
+        let ground: Sprite = Sprite.from('scene_17/Ground.png');
+        ground.position.set(0, 694);
+        this.mainContainer.addChild(ground);
 
         // TEXT
         this.mainContainer.on('pointerdown', this.addText, this);
@@ -58,17 +65,25 @@ export class Scene16 extends Container implements IScene {
 
     public addText(): void {
         if (this.numClicks == 0) {
-            this.text.texture = Texture.from('scene_16/Text1.png');
-            this.text.position.set(928, 187);
+            this.text.texture = Texture.from('scene_17/Text1.png');
+            this.text.position.set(535, 278);
             this.mainContainer.addChild(this.text);
             this.numClicks++;
             return;
         }
         if (this.numClicks == 1) {
-            this.text.texture = Texture.from('scene_16/Text2.png');
-            this.text.position.set(889, 62);
-            this.mainContainer.removeChild(this.dialogue);
-            this.mainContainer.addChild(this.text);
+            this.text.texture = Texture.from('scene_17/Text2.png');
+            this.text.position.set(535, 278);
+            this.numClicks++;
+            return;
+        }
+        if (this.numClicks == 2) {
+            this.text.texture = Texture.from('scene_17/Text3.png');
+            this.text.position.set(508, 277);
+
+            this.jackal.texture = Texture.from('scene_17/Jackal2.png');
+            this.jackal.position.set(662, 652);
+            
             this.numClicks++;
             return;
         }
@@ -89,7 +104,7 @@ export class Scene16 extends Container implements IScene {
 
     public goNext(_event: Event): void {
         alert('hi');
-    }
+        }
 
     public goPrev(_event: Event): void {
         alert('hi');
