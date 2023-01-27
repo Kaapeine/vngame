@@ -20,7 +20,7 @@ export class SCENENAME extends Container implements IScene {
         this.cursorFirefly.play();
         this.cursorFirefly.animationSpeed = 0.05;
 
-        this.mainContainer.position.set(150, 150);
+        this.mainContainer.position.set(148, 150);
 
         this.mainContainer.addChild(this.cursorFirefly);
         this.mainContainer.interactive = true;

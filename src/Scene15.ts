@@ -50,7 +50,7 @@ export class Scene15 extends Container implements IScene {
         this.text2 = Sprite.from('scene_15/Text 2.png');
 
         // FOOTER
-        this.mainContainer.position.set(150, 150);
+        this.mainContainer.position.set(148, 150);
 
         this.mainContainer.addChild(this.cursorFirefly);
         this.mainContainer.interactive = true;

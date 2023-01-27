@@ -3,6 +3,5 @@
 - How does the player figure out which house is Aami's
 - Fix honey sprite in scene 4
 - Font in credits
-- Shift main container by a few pixels
 - Increase size of interactive sprites on mouse over
  

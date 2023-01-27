@@ -1,4 +1,4 @@
-// import { IntroScene } from "./IntroScene";
+// import { TitleScene } from "./TitleScene";
 import { Manager } from "./Manager";
 import { TitleScene } from "./TitleScene";
 

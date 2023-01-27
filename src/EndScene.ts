@@ -32,7 +32,7 @@ export class EndScene extends Container implements IScene {
 
         this.addFireflies();
 
-        this.mainContainer.position.set(150, 150);
+        this.mainContainer.position.set(148, 150);
         this.addChild(this.mainContainer);
         this.addFrame();
         this.addButtons();

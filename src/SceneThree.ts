@@ -30,7 +30,7 @@ export class SceneThree extends Container implements IScene {
         this.addStars();
         this.addHouses();
 
-        this.mainContainer.position.set(150, 150);
+        this.mainContainer.position.set(148, 150);
 
         // text
         this.text = Sprite.from('scene_three/Text1.png');

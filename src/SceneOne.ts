@@ -42,7 +42,7 @@ export class SceneOne extends Container implements IScene {
         aami.position.set(351, 426);
         this.mainContainer.addChild(aami);
 
-        this.mainContainer.position.set(150, 150);
+        this.mainContainer.position.set(148, 150);
 
         this.mainContainer.addChild(this.cursorFirefly);
         this.mainContainer.interactive = true;
