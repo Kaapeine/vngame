@@ -1,5 +1,7 @@
 import { Application } from "@pixi/app";
 import { DisplayObject } from "@pixi/display";
+import { Sound } from "@pixi/sound";
+import { Sprite } from "pixi.js";
 
 export class Manager {
     private constructor() { /*this class is purely static. No constructor to see here*/ }
@@ -12,6 +14,8 @@ export class Manager {
     private static _width: number;
     private static _height: number;
 
+    public static loop1: Sound = Sound.from('Music/girlstory_loop1.mp3');
+    public static loop2: Sound = Sound.from('Music/aamistory_loop2.mp3');
 
     // With getters but not setters, these variables become read-only
     public static get width(): number {
@@ -43,9 +47,13 @@ export class Manager {
 
         // call it manually once so we are sure we are the correct size after starting
         Manager.resize();
-
         // Add the ticker
         Manager.app.ticker.add(Manager.update);
+
+        Manager.loop1.loop = true;
+        Manager.loop2.loop = true;
+
+        Manager.loop1.play();
     }
 
 
@@ -80,9 +88,18 @@ export class Manager {
             Manager.currentScene.destroy();
         }
 
+        let splash: Sprite = Sprite.from('intro_scene/Intro.jpg');
+        splash.scale.set(1.5, 1.5);
+        Manager.app.stage.addChild(splash);
+
+        let frame: Sprite = Sprite.from('frame.png');
+        Manager.app.stage.addChild(frame);
+
         // Add the new one
         Manager.currentScene = newScene;
-        Manager.app.stage.addChild(Manager.currentScene);
+        window.setTimeout(function() {
+            Manager.app.stage.addChild(Manager.currentScene);
+        }, 1000);
     }
 
     // This update will be called by a pixi ticker and tell the scene that a tick happened

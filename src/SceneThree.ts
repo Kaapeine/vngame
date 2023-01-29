@@ -14,6 +14,9 @@ export class SceneThree extends Container implements IScene {
     constructor() {
         super();
 
+        Manager.loop1.stop();
+        Manager.loop2.play();
+
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
@@ -174,6 +177,8 @@ export class SceneThree extends Container implements IScene {
     public goPrev(_event: Event): void {
         const prevScene: IScene = new SceneTwo;
         Manager.changeScene(prevScene);
+        Manager.loop2.stop();
+        Manager.loop1.play();
     }
 
     public update(_delta: number): void {
