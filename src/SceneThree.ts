@@ -37,6 +37,10 @@ export class SceneThree extends Container implements IScene {
         this.text.position.set(60, 62);
         this.mainContainer.on('pointerdown', this.addText, this);
 
+        let findText: Sprite = Sprite.from('scene_three/find.png');
+        findText.position.set(1412, 737);
+        this.mainContainer.addChild(findText);
+
         this.mainContainer.addChild(this.cursorFirefly);
         this.mainContainer.interactive = true;
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);

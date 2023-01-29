@@ -103,7 +103,7 @@ export class SceneFour extends Container implements IScene {
         this.mainContainer.addChild(rice.sprite);
 
         let honey: dragSprite = new dragSprite('scene_four/Honey.png', this.mainContainer, pot);
-        honey.sprite.position.set(703, 617);
+        honey.sprite.position.set(1035, 644);
         this.mainContainer.addChild(honey.sprite);
     }
 
