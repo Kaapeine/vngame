@@ -23,22 +23,6 @@ export class Scene12 extends Container implements IScene {
         let bg: Sprite = Sprite.from('scene_12/Background.png');
         this.mainContainer.addChild(bg);
 
-        let clearWater: Sprite = Sprite.from('scene_12/Clear Water (hidden).png');
-        clearWater.position.set(0, 462);
-        this.mainContainer.addChild(clearWater);
-        clearWater.visible = false;
-
-        let trees: Sprite = Sprite.from('scene_12/Trees.png');
-        this.mainContainer.addChild(trees);
-
-        let aami: Sprite = Sprite.from('scene_12/Aami.png');
-        aami.position.set(562, 338);
-        this.mainContainer.addChild(aami);
-
-        this.goddess.texture = Texture.from('scene_12/Goddess.png');
-        this.goddess.position.set(695, 1);
-        this.mainContainer.addChild(this.goddess);
-
         let lake: Sprite = Sprite.from('scene_12/Lake.png');
         lake.position.set(0, 568);
         this.mainContainer.addChild(lake);
@@ -57,6 +41,22 @@ export class Scene12 extends Container implements IScene {
                 this.mainContainer.removeChild(this.goddess);
             }
         })
+
+        let clearWater: Sprite = Sprite.from('scene_12/Clear Water (hidden).png');
+        clearWater.position.set(0, 462);
+        this.mainContainer.addChild(clearWater);
+        clearWater.visible = false;
+
+        let trees: Sprite = Sprite.from('scene_12/Trees.png');
+        this.mainContainer.addChild(trees);
+
+        let aami: Sprite = Sprite.from('scene_12/Aami.png');
+        aami.position.set(562, 338);
+        this.mainContainer.addChild(aami);
+
+        this.goddess.texture = Texture.from('scene_12/Goddess.png');
+        this.goddess.position.set(695, 1);
+        this.mainContainer.addChild(this.goddess);
 
         // TEXT
         this.text1.texture = Texture.from('scene_12/Text1.png');

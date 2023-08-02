@@ -27,7 +27,7 @@ export class SceneThree extends Container implements IScene {
         this.cursorFirefly.play();
         this.cursorFirefly.animationSpeed = 0.05;
 
-        let bgTrees: Sprite = Sprite.from('scene_three/BG_Trees.png');
+        let bgTrees: Sprite = Sprite.from('scene_three/BG_Trees_new.png');
         this.mainContainer.addChild(bgTrees);
         
         this.addStars();
@@ -36,8 +36,8 @@ export class SceneThree extends Container implements IScene {
         this.mainContainer.position.set(148, 150);
 
         // text
-        this.text = Sprite.from('scene_three/Text1.png');
-        this.text.position.set(60, 62);
+        this.text = Sprite.from('scene_three/new/Text 1.png');
+        this.text.position.set(59, 61);
         this.mainContainer.on('pointerdown', this.addText, this);
 
         let findText: Sprite = Sprite.from('scene_three/find.png');
@@ -54,16 +54,21 @@ export class SceneThree extends Container implements IScene {
     }
 
     public addStars(): void {
-        const starSeq: Array<string> = ['scene_three/stars/stars-1.png', 'scene_three/stars/stars-2.png', 'scene_three/stars/stars-3.png'];
-        let starTexSeq: Array<Texture> = [];
-        for (let i = 0; i < starSeq.length; i++) {
-            let tex: Texture = Texture.from(starSeq[i]);
-            starTexSeq.push(tex);
-        }
-        const stars = new AnimatedSprite(starTexSeq);
-        stars.play();
-        stars.animationSpeed = 0.025;
-        this.mainContainer.addChild(stars);
+        // const starSeq: Array<string> = ['scene_three/stars/stars-1.png', 'scene_three/stars/stars-2.png', 'scene_three/stars/stars-3.png'];
+        // let starTexSeq: Array<Texture> = [];
+        // for (let i = 0; i < starSeq.length; i++) {
+        //     let tex: Texture = Texture.from(starSeq[i]);
+        //     starTexSeq.push(tex);
+        // }
+        // const stars = new AnimatedSprite(starTexSeq);
+        // stars.play();
+        // stars.animationSpeed = 0.025;
+        // this.mainContainer.addChild(stars);
+
+        const glowAnim: AnimatedSprite = AnimatedSprite.fromImages(['scene_three/new/Glow 1.png', 'scene_three/new/Glow 2.png']);
+        glowAnim.play();
+        glowAnim.animationSpeed = 0.025;
+        this.mainContainer.addChild(glowAnim);
     }
 
     public addHouses(): void {
@@ -115,12 +120,7 @@ export class SceneThree extends Container implements IScene {
             return;
         }
         if (this.numClicks == 1 && !this.isClickedScene) {
-            this.text.texture = Texture.from('scene_three/Text2.png');
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks == 2 && !this.isClickedScene) {
-            this.text.texture = Texture.from('scene_three/Text3.png');
+            this.text.texture = Texture.from('scene_three/new/Text 2 .png');
             this.numClicks++;
             return;
         }

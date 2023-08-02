@@ -21,6 +21,7 @@ export class Scene10 extends Container implements IScene {
         this.mainContainer.addChild(aami);
 
         let waves: AnimatedSprite = AnimatedSprite.fromImages(['scene_10/waves/Scene10Waves1.png', 'scene_10/waves/Scene10Waves2.png', 'scene_10/waves/Scene10Waves3.png', 'scene_10/waves/Scene10Waves4.png'])
+        waves.alpha = 0.3;
         waves.play();
         waves.animationSpeed = 0.05;
         waves.position.set(507, 8);

@@ -35,8 +35,8 @@ export class SceneSeven extends Container implements IScene {
         this.mainContainer.addChild(grass);
 
         // TEXT
-        this.clearBush = Sprite.from('scene_seven/clearbush.png');
-        this.clearBush.position.set(1223, 752);
+        this.clearBush = Sprite.from('scene_seven/clearbush2.png');
+        this.clearBush.position.set(1260, 752);
         this.mainContainer.addChild(this.clearBush);
 
         this.text = Sprite.from('scene_seven/Text 1.png');

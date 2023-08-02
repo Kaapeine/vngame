@@ -29,20 +29,25 @@ export class dragSprite {
 
         this.collisionObj = collisionObj;
 
+        let xoff: number = 0;
+        let yoff: number = 0;
+
         
         let Drag = false;
 
         this.sprite.on('pointerdown', (e: InteractionEvent) => {
             let globalPos: Point = e.data.global;
             let localPos: Point = mainContainer.toLocal(globalPos);
-            this.sprite.position.set(localPos.x, localPos.y);
+            xoff = this.sprite.position.x - localPos.x;
+            yoff = this.sprite.position.y - localPos.y;
+            this.sprite.position.set(localPos.x+xoff, localPos.y+yoff);
             Drag = true;
         })
         this.sprite.on('pointermove', (e: InteractionEvent) => {
             if (Drag) {
                 let globalPos: Point = e.data.global;
                 let localPos: Point = mainContainer.toLocal(globalPos);
-                this.sprite.position.set(localPos.x, localPos.y);
+                this.sprite.position.set(localPos.x+xoff, localPos.y+yoff);
             }
         })
         this.sprite.on('pointerup', () => {

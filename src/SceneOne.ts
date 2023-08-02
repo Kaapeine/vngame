@@ -73,8 +73,9 @@ export class SceneOne extends Container implements IScene {
 
     public showJackal(_event: Event): void {
         if (this.numClicks == 0) {
-            let jackal: Texture = Texture.from('scene_one/jackal.png');
-            this.wheat.texture = jackal;
+            let jackal: Sprite = Sprite.from('scene_one/jackal_new.png');
+            jackal.position.set(1075, 537);
+            this.mainContainer.addChild(jackal);
             this.numClicks++;
             return;
         }

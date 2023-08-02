@@ -15,14 +15,14 @@ export class Scene13 extends Container implements IScene {
         super();
 
         let bg: Sprite = Sprite.from('scene_13/Background.png');
-        bg.position.set(0, -150);
+        bg.position.set(0, -151);
         this.mainContainer.addChild(bg);
 
         let glow: AnimatedSprite = AnimatedSprite.fromImages(['scene_13/glow/Scene13GoddessGlow1.png', 'scene_13/glow/Scene13GoddessGlow2.png', 'scene_13/glow/Scene13GoddessGlow3.png', 'scene_13/glow/Scene13GoddessGlow4.png'])
         glow.play();
         glow.animationSpeed = 0.05;
-        glow.position.set(0, 104-80);
-        glow.scale.set(1.01, 1.01);
+        glow.position.set(0, 0);
+        // glow.scale.set(1.03, 1.03);
         this.mainContainer.addChild(glow);
 
         this.mainContainer.on('pointerdown', this.addText, this);
