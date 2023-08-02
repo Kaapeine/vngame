@@ -11,9 +11,14 @@ export class Scene15 extends Container implements IScene {
     private text1: Sprite;
     private text2: Sprite;
     private numClicks: number = 0;
+    
+    private rButton: Sprite = new Sprite();
+
 
     constructor() {
         super();
+        Manager.loop1.play();
+        Manager.loop2.stop();
 
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
@@ -87,6 +92,7 @@ export class Scene15 extends Container implements IScene {
             this.text2.position.set(808, 163);
             this.mainContainer.addChild(this.text2);
             this.numClicks++;
+            this.rButton.visible = true;
             return;
         }
     }
@@ -98,6 +104,8 @@ export class Scene15 extends Container implements IScene {
 
     public goPrev(_event: Event): void {
         const prevScene: IScene = new Scene14;
+        Manager.loop1.stop();
+        Manager.loop2.play();
         Manager.changeScene(prevScene);
     }
 
@@ -117,25 +125,25 @@ export class Scene15 extends Container implements IScene {
     }
 
     public addButtons(): void {
-        const rButton = new Sprite();
         const rButtonDefault = Texture.from('rbutton/Forward.png');
         const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
         const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
 
-        rButton.texture = rButtonDefault;
-        rButton.position.set(1800, 960);
+        this.rButton.texture = rButtonDefault;
+        this.rButton.position.set(1800, 960);
         
         // interactivity
-        rButton.buttonMode = true;
-        rButton.interactive = true;
-        rButton.on('pointerover', (_event) => {
-            rButton.texture = rButtonHover;
+        this.rButton.buttonMode = true;
+        this.rButton.interactive = true;
+        this.rButton.visible = false;
+        this.rButton.on('pointerover', (_event) => {
+            this.rButton.texture = rButtonHover;
         });
-        rButton.on('pointerout', (_event) => {
-            rButton.texture = rButtonDefault;
+        this.rButton.on('pointerout', (_event) => {
+            this.rButton.texture = rButtonDefault;
         })
-        rButton.on('pointerdown', (_event) => {
-            rButton.texture = rButtonClicked;
+        this.rButton.on('pointerdown', (_event) => {
+            this.rButton.texture = rButtonClicked;
             this.goNext(_event);
         });
 
@@ -161,7 +169,7 @@ export class Scene15 extends Container implements IScene {
             this.goPrev(_event);
         });
 
-        this.addChild(rButton);
+        this.addChild(this.rButton);
         this.addChild(lButton);
     }
 

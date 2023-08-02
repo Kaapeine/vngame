@@ -81,8 +81,7 @@ export class Manager {
         Manager.loop1.loop = true;
         Manager.loop2.loop = true;
 
-        Manager.loop1.play();   
-        Manager.loadScenes1();
+        // Manager.loadScenes1();
     }
 
     public static loadScenes1(): void {
@@ -225,14 +224,14 @@ export class Manager {
 
         console.log(newScene.constructor.name)
 
-        if (newScene.constructor.name == "TitleScene")
-            this.loadScenes2();
-        if (newScene.constructor.name == "IntroScene")
-            this.loadScenes2();
-        if (newScene.constructor.name == "SceneOne")
-            this.loadScenes3();
-        if (newScene.constructor.name == "SceneTwo")
-            this.loadScenes4();
+        // if (newScene.constructor.name == "TitleScene")
+        //     this.loadScenes2();
+        // if (newScene.constructor.name == "IntroScene")
+        //     this.loadScenes2();
+        // if (newScene.constructor.name == "SceneOne")
+        //     this.loadScenes3();
+        // if (newScene.constructor.name == "SceneTwo")
+        //     this.loadScenes4();
 
         // Add the new one
         Manager.currentScene = newScene;

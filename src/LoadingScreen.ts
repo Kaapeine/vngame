@@ -30,6 +30,9 @@ export class LoadingScreen extends Container implements IScene {
     constructor() {
         super();
 
+        Manager.loop1.play();
+        Manager.loop2.stop();
+
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         let fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
@@ -60,7 +63,6 @@ export class LoadingScreen extends Container implements IScene {
         this.addFrame();
         this.addButtons();
 
-        // this.loadScenes();
         window.setTimeout(function() {
             loadingText.visible = false;
             spinner.visible = false;
@@ -115,7 +117,7 @@ export class LoadingScreen extends Container implements IScene {
     }
 
     public addButtons(): void {
-        const rButton = new Sprite();
+        const rButton: Sprite = new Sprite();
         const rButtonDefault = Texture.from('rbutton/Forward.png');
         const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
         const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
@@ -126,6 +128,7 @@ export class LoadingScreen extends Container implements IScene {
         // interactivity
         rButton.buttonMode = true;
         rButton.interactive = true;
+        rButton.visible = true;
         rButton.on('pointerover', (_event) => {
             rButton.texture = rButtonHover;
         });
@@ -159,6 +162,11 @@ export class LoadingScreen extends Container implements IScene {
             this.goPrev(_event);
         });
 
+        // timeout for BUTTON
+        // window.setTimeout(function() {
+        //     rButton.visible = true;
+        // }, 10000);
+        
         this.addChild(rButton);
         // this.addChild(lButton);
     }

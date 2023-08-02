@@ -11,8 +11,6 @@ export class TitleScene extends Container implements IScene {
     
     constructor() {
         super();
-        Manager.loop1.play();
-        Manager.loop2.stop();
 
         const titleBg: Sprite = Sprite.from('title_screen/BG.png');
         this.titleContainer.addChild(titleBg);

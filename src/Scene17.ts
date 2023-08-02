@@ -14,6 +14,9 @@ export class Scene17 extends Container implements IScene {
     private text: Sprite = new Sprite();
     private numClicks: number = 0;
 
+    private rButton: Sprite = new Sprite();
+
+
     constructor() {
         super();
 
@@ -87,6 +90,7 @@ export class Scene17 extends Container implements IScene {
             this.jackal.position.set(662, 652);
 
             this.numClicks++;
+            this.rButton.visible = true;
             return;
         }
     }
@@ -130,25 +134,25 @@ export class Scene17 extends Container implements IScene {
     }
 
     public addButtons(): void {
-        const rButton = new Sprite();
         const rButtonDefault = Texture.from('rbutton/Forward.png');
         const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
         const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
 
-        rButton.texture = rButtonDefault;
-        rButton.position.set(1800, 960);
+        this.rButton.texture = rButtonDefault;
+        this.rButton.position.set(1800, 960);
         
         // interactivity
-        rButton.buttonMode = true;
-        rButton.interactive = true;
-        rButton.on('pointerover', (_event) => {
-            rButton.texture = rButtonHover;
+        this.rButton.buttonMode = true;
+        this.rButton.interactive = true;
+        this.rButton.visible = false;
+        this.rButton.on('pointerover', (_event) => {
+            this.rButton.texture = rButtonHover;
         });
-        rButton.on('pointerout', (_event) => {
-            rButton.texture = rButtonDefault;
+        this.rButton.on('pointerout', (_event) => {
+            this.rButton.texture = rButtonDefault;
         })
-        rButton.on('pointerdown', (_event) => {
-            rButton.texture = rButtonClicked;
+        this.rButton.on('pointerdown', (_event) => {
+            this.rButton.texture = rButtonClicked;
             this.goNext(_event);
         });
 
@@ -174,7 +178,7 @@ export class Scene17 extends Container implements IScene {
             this.goPrev(_event);
         });
 
-        this.addChild(rButton);
+        this.addChild(this.rButton);
         this.addChild(lButton);
     }
 
