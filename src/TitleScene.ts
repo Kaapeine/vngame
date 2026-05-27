@@ -39,7 +39,6 @@ export class TitleScene extends Container implements IScene {
             let tex = Texture.from(heartSequence[i]);
             heartTextureSequence.push(tex);
         }
-        console.log("Size: ", heartTextureSequence.length);
         const heart: AnimatedSprite = new AnimatedSprite(heartTextureSequence);
 
         let globalPos: Point = new Point(1110, 490);
@@ -59,9 +58,7 @@ export class TitleScene extends Container implements IScene {
         Manager.changeScene(new IntroScene);
     }
 
-    public goPrev(_event: Event): void {
-        alert('hi');
-    }
+    public goPrev(_event: Event): void {}
 
     public update(_delta: number): void {
         // this.leavesAngle += 0.01;
