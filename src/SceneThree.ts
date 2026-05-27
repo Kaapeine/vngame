@@ -21,9 +21,9 @@ export class SceneThree extends Container implements IScene {
         Manager.loop2.play();
 
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -60,7 +60,7 @@ export class SceneThree extends Container implements IScene {
         // const starSeq: Array<string> = ['scene_three/stars/stars-1.png', 'scene_three/stars/stars-2.png', 'scene_three/stars/stars-3.png'];
         // let starTexSeq: Array<Texture> = [];
         // for (let i = 0; i < starSeq.length; i++) {
-        //     let tex: Texture = Texture.from(starSeq[i]);
+        //     const tex: Texture = Texture.from(starSeq[i]);
         //     starTexSeq.push(tex);
         // }
         // const stars = new AnimatedSprite(starTexSeq);
@@ -134,9 +134,9 @@ export class SceneThree extends Container implements IScene {
         this.isClickedScene = true;
 
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -191,11 +191,11 @@ export class SceneThree extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }

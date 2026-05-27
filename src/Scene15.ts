@@ -21,9 +21,9 @@ export class Scene15 extends Container implements IScene {
         Manager.loop2.stop();
 
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -69,9 +69,9 @@ export class Scene15 extends Container implements IScene {
 
     public addRain(): void {
         const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
-        let rainTextureSeq: Array<Texture> = [];
+        const rainTextureSeq: Array<Texture> = [];
         for (let i = 0; i < rainSeq.length; i++) {
-            let tex = Texture.from(rainSeq[i]);
+            const tex = Texture.from(rainSeq[i]);
             rainTextureSeq.push(tex);
         }
         const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
@@ -115,11 +115,11 @@ export class Scene15 extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }

@@ -33,16 +33,16 @@ export class TitleScene extends Container implements IScene {
 
     public addHeart(): void {
         const heartSequence: Array<string> = ["title_screen/heart/1.png", "title_screen/heart/2.png", "title_screen/heart/3.png", "title_screen/heart/4.png"];
-        let heartTextureSequence: Array<Texture> = [];
+        const heartTextureSequence: Array<Texture> = [];
         for (let i = 0; i < heartSequence.length; i++){
             // console.log(i);
-            let tex = Texture.from(heartSequence[i]);
+            const tex = Texture.from(heartSequence[i]);
             heartTextureSequence.push(tex);
         }
         const heart: AnimatedSprite = new AnimatedSprite(heartTextureSequence);
 
-        let globalPos: Point = new Point(1110, 490);
-        let localPos: Point = this.titleContainer.toLocal(globalPos);
+        const globalPos: Point = new Point(1110, 490);
+        const localPos: Point = this.titleContainer.toLocal(globalPos);
         heart.position.set(localPos.x, localPos.y);
 
         heart.play();

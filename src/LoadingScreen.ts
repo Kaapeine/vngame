@@ -22,7 +22,7 @@ export class LoadingScreen extends Container implements IScene {
       'intro_scene/firefly/firefly-4.png',
       'intro_scene/firefly/firefly-5.png',
     ];
-    let fireflyTextureSeq: Array<Texture> = [];
+    const fireflyTextureSeq: Array<Texture> = [];
     for (let i = 0; i < fireflySeq.length; i++) {
       fireflyTextureSeq.push(Texture.from(fireflySeq[i]));
     }

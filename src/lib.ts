@@ -36,8 +36,8 @@ export class DragSprite {
         let Drag = false;
 
         this.sprite.on('pointerdown', (e: InteractionEvent) => {
-            let globalPos: Point = e.data.global;
-            let localPos: Point = mainContainer.toLocal(globalPos);
+            const globalPos: Point = e.data.global;
+            const localPos: Point = mainContainer.toLocal(globalPos);
             xoff = this.sprite.position.x - localPos.x;
             yoff = this.sprite.position.y - localPos.y;
             this.sprite.position.set(localPos.x+xoff, localPos.y+yoff);
@@ -45,8 +45,8 @@ export class DragSprite {
         })
         this.sprite.on('pointermove', (e: InteractionEvent) => {
             if (Drag) {
-                let globalPos: Point = e.data.global;
-                let localPos: Point = mainContainer.toLocal(globalPos);
+                const globalPos: Point = e.data.global;
+                const localPos: Point = mainContainer.toLocal(globalPos);
                 this.sprite.position.set(localPos.x+xoff, localPos.y+yoff);
             }
         })

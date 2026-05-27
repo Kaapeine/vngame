@@ -62,9 +62,9 @@ export class SceneFour extends Container implements IScene {
       'intro_scene/firefly/firefly-4.png',
       'intro_scene/firefly/firefly-5.png',
     ];
-    let fireflyTextureSeq: Array<Texture> = [];
+    const fireflyTextureSeq: Array<Texture> = [];
     for (let i = 0; i < fireflySeq.length; i++) {
-      let tex = Texture.from(fireflySeq[i]);
+      const tex = Texture.from(fireflySeq[i]);
       fireflyTextureSeq.push(tex);
     }
     this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -180,11 +180,11 @@ export class SceneFour extends Container implements IScene {
   }
 
   public moveCursorFirefly(e: InteractionEvent): void {
-    let globalPos: Point = e.data.global;
-    let localPos: Point = this.mainContainer.toLocal(globalPos);
+    const globalPos: Point = e.data.global;
+    const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-    let x_off = 20;
-    let y_off = 20;
+    const x_off = 20;
+    const y_off = 20;
 
     this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
   }
