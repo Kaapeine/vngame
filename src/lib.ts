@@ -17,10 +17,10 @@ export function checkCollision(objA: DisplayObject, objB: DisplayObject): boolea
     return topmostBottom > bottommostTop;
 }
 
-export class dragSprite {
+export class DragSprite {
 
     public sprite: Sprite;
-    public destroyOnCollision: Boolean = true;
+    public destroyOnCollision: boolean = true;
     public collisionObj: DisplayObject;
 
     constructor(path: string, mainContainer: Container, collisionObj: DisplayObject) {
