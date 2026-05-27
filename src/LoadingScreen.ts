@@ -30,6 +30,9 @@ export class LoadingScreen extends Container implements IScene {
     this.cursorFirefly.play();
     this.cursorFirefly.animationSpeed = 0.05;
 
+    const introBg: Sprite = Sprite.from('intro_scene/Intro.jpg');
+    this.mainContainer.addChild(introBg);
+
     this.mainContainer.position.set(148, 150);
     this.mainContainer.addChild(this.cursorFirefly);
     this.mainContainer.interactive = true;

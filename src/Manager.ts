@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Application } from "@pixi/app";
 import { DisplayObject } from "@pixi/display";
 import { Sound } from "@pixi/sound";
@@ -8,6 +9,8 @@ export class Manager {
 
     public static app: Application;
     private static currentScene: IScene;
+    private static persistentFrame: Sprite;
+    private static introOverlay: Sprite;
 
     private static _width: number;
     private static _height: number;
@@ -47,6 +50,16 @@ export class Manager {
 
         Manager.loop1.loop = true;
         Manager.loop2.loop = true;
+
+        // Persistent frame — sits at the bottom; scene content (148,150 offset) doesn't cover the borders
+        Manager.persistentFrame = Sprite.from('frame.png');
+        Manager.app.stage.addChild(Manager.persistentFrame);
+
+        // Intro.jpg overlay — sits above scene and frame during transitions, alpha=0 at rest
+        Manager.introOverlay = Sprite.from('intro_scene/Intro.jpg');
+        Manager.introOverlay.position.set(148, 150);
+        Manager.introOverlay.alpha = 0;
+        Manager.app.stage.addChild(Manager.introOverlay);
     }
 
     public static resize(): void {
@@ -66,20 +79,27 @@ export class Manager {
     }
 
     public static changeScene(newScene: IScene): void {
-        if (Manager.currentScene) {
-            Manager.app.stage.removeChild(Manager.currentScene);
-            Manager.currentScene.destroy();
+        // First scene — no transition, just show it immediately
+        // Insert at index 1: above persistentFrame(0), below introOverlay(top)
+        if (!Manager.currentScene) {
+            Manager.currentScene = newScene;
+            Manager.app.stage.addChildAt(Manager.currentScene, 1);
+            return;
         }
 
-        let splash: Sprite = Sprite.from('intro_scene/Intro.jpg');
-        splash.scale.set(1.5, 1.5);
-        Manager.app.stage.addChild(splash);
-
-        let frame: Sprite = Sprite.from('frame.png');
-        Manager.app.stage.addChild(frame);
-
-        Manager.currentScene = newScene;
-        Manager.app.stage.addChild(Manager.currentScene);
+        gsap.to(Manager.introOverlay, {
+            alpha: 1,
+            duration: 0.3,
+            onComplete: () => {
+                Manager.app.stage.removeChild(Manager.currentScene);
+                Manager.currentScene.destroy();
+                Manager.currentScene = newScene;
+                // After removing old scene: stage is [persistentFrame(0), introOverlay(1)]
+                // Insert new scene at 1 → [persistentFrame(0), newScene(1), introOverlay(2)]
+                Manager.app.stage.addChildAt(Manager.currentScene, 1);
+                gsap.to(Manager.introOverlay, { alpha: 0, duration: 0.3 });
+            }
+        });
     }
 
     private static update(delta: number): void {
@@ -93,5 +113,4 @@ export interface IScene extends DisplayObject {
     update(framesPassed: number): void;
     goNext(_event: Event): void;
     goPrev(_event: Event): void;
-    addFrame(): void;
 }
