@@ -1,219 +1,237 @@
 import gsap from 'gsap';
-import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
-import { IScene, Manager } from "./Manager";
-import { Scene10 } from "./Scene10";
-import { Scene8 } from "./Scene8";
-
+import {
+  Container,
+  Texture,
+  Sprite,
+  AnimatedSprite,
+  Point,
+  InteractionEvent,
+} from 'pixi.js';
+import { IScene, Manager } from './Manager';
+import { Scene10 } from './Scene10';
+import { Scene8 } from './Scene8';
 
 export class Scene9 extends Container implements IScene {
+  private mainContainer: Container = new Container();
+  private cursorFirefly: AnimatedSprite;
 
-    private mainContainer: Container = new Container();
-    private cursorFirefly: AnimatedSprite;
+  private text: Sprite = new Sprite();
+  private hover: Sprite = new Sprite();
 
-    private text: Sprite = new Sprite();
-    private hover: Sprite = new Sprite();
+  private numClicks: number = 0;
 
-    private numClicks: number = 0;
+  private tiger: Sprite = new Sprite();
+  private strongTiger: Sprite = new Sprite();
 
-    private tiger: Sprite = new Sprite();
+  private rButton: Sprite = new Sprite();
 
-    private rButton: Sprite = new Sprite();
+  constructor() {
+    super();
 
+    let bg: Sprite = Sprite.from('scene_9/Background.png');
+    this.mainContainer.addChild(bg);
 
-    constructor() {
-        super();
+    let aami: Sprite = Sprite.from('scene_9/Aami.png');
+    aami.position.set(614, 38);
+    this.mainContainer.addChild(aami);
 
-        let bg: Sprite = Sprite.from('scene_9/Background.png');
-        this.mainContainer.addChild(bg);
+    this.tiger.texture = Texture.from('scene_9/Weak.png');
+    this.tiger.position.set(615, 5);
+    this.mainContainer.addChild(this.tiger);
 
-        let aami: Sprite = Sprite.from('scene_9/Aami.png');
-        aami.position.set(614, 38);
-        this.mainContainer.addChild(aami);
+    this.strongTiger = Sprite.from('scene_9/Strong.png');
+    this.strongTiger.position.set(920, 5);
+    this.strongTiger.alpha = 0;
+    this.mainContainer.addChild(this.strongTiger);
 
-        this.tiger.texture = Texture.from('scene_9/Weak.png');
-        this.tiger.position.set(615, 5);
-        this.mainContainer.addChild(this.tiger);
+    // HERBS
+    let titaphul: Sprite = Sprite.from('scene_9/Titaphul.png');
+    titaphul.position.set(1176, 595);
+    this.mainContainer.addChild(titaphul);
+    titaphul.interactive = true;
+    titaphul.on('pointerover', () => {
+      titaphul.texture = Texture.from('scene_9/Titaphul hovered.png');
+      titaphul.position.set(1154, 458);
+    });
+    titaphul.on('pointerout', () => {
+      titaphul.texture = Texture.from('scene_9/Titaphul.png');
+      titaphul.position.set(1176, 595);
+    });
 
-        // HERBS
-        let titaphul: Sprite = Sprite.from('scene_9/Titaphul.png');
-        titaphul.position.set(1176, 595);
-        this.mainContainer.addChild(titaphul);
-        titaphul.interactive = true;
-        titaphul.on('pointerover', () => {
-          titaphul.texture = Texture.from('scene_9/Titaphul hovered.png');
-          titaphul.position.set(1154, 458);
-        });
-        titaphul.on('pointerout', () => {
-          titaphul.texture = Texture.from('scene_9/Titaphul.png');
-          titaphul.position.set(1176, 595);
-        });
+    let kalmegh: Sprite = Sprite.from('scene_9/Kalmegh.png');
+    kalmegh.position.set(1106, 660);
+    this.mainContainer.addChild(kalmegh);
+    kalmegh.interactive = true;
+    kalmegh.on('pointerover', () => {
+      kalmegh.texture = Texture.from('scene_9/Kalmegh Hovered.png');
+      kalmegh.position.set(1013, 533);
+    });
+    kalmegh.on('pointerout', () => {
+      kalmegh.texture = Texture.from('scene_9/Kalmegh.png');
+      kalmegh.position.set(1106, 660);
+    });
 
-        let kalmegh: Sprite = Sprite.from('scene_9/Kalmegh.png');
-        kalmegh.position.set(1106, 660);
-        this.mainContainer.addChild(kalmegh);
-        kalmegh.interactive = true;
-        kalmegh.on('pointerover', () => {
-            kalmegh.texture = Texture.from('scene_9/Kalmegh Hovered.png');
-            kalmegh.position.set(1013, 533);
-        })
-        kalmegh.on('pointerout', () => {
-            kalmegh.texture = Texture.from('scene_9/Kalmegh.png');
-            kalmegh.position.set(1106, 660);
-        })
+    let nonatenga: Sprite = Sprite.from('scene_9/Nona tenga.png');
+    nonatenga.position.set(1365, 665);
+    this.mainContainer.addChild(nonatenga);
+    nonatenga.interactive = true;
+    nonatenga.on('pointerover', () => {
+      nonatenga.texture = Texture.from('scene_9/Noga tenga Hovered.png');
+      nonatenga.position.set(1304, 542);
+    });
+    nonatenga.on('pointerout', () => {
+      nonatenga.texture = Texture.from('scene_9/Nona tenga.png');
+      nonatenga.position.set(1365, 665);
+    });
 
-        let nonatenga: Sprite = Sprite.from('scene_9/Nona tenga.png');
-        nonatenga.position.set(1365, 665);
-        this.mainContainer.addChild(nonatenga);
-        nonatenga.interactive = true;
-        nonatenga.on('pointerover', () => {
-            nonatenga.texture = Texture.from('scene_9/Noga tenga Hovered.png');
-            nonatenga.position.set(1304, 542);
-        })
-        nonatenga.on('pointerout', () => {
-            nonatenga.texture = Texture.from('scene_9/Nona tenga.png');
-            nonatenga.position.set(1365, 665);
-        })
+    // TEXT
+    this.text.texture = Texture.from('scene_9/Text 1.png');
+    this.hover.texture = Texture.from('scene_9/hover.png');
+    this.mainContainer.on('pointerdown', this.addText, this);
+    this.addText();
 
-
-        // TEXT
-        this.text.texture = Texture.from('scene_9/Text 1.png');
-        this.hover.texture = Texture.from('scene_9/hover.png');
-        this.mainContainer.on('pointerdown', this.addText, this);
-        this.addText();
-
-
-        // FOOTER
-        const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        const fireflyTextureSeq: Array<Texture> = [];
-        for (let i = 0; i < fireflySeq.length; i++){
-            const tex = Texture.from(fireflySeq[i]);
-            fireflyTextureSeq.push(tex);
-        }
-        this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
-        this.cursorFirefly.play();
-        this.cursorFirefly.animationSpeed = 0.05;
-
-        this.mainContainer.position.set(148, 150);
-
-        this.mainContainer.addChild(this.cursorFirefly);
-        this.mainContainer.interactive = true;
-        this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
-
-        this.addChild(this.mainContainer);
-        this.addButtons();
+    // FOOTER
+    const fireflySeq: Array<string> = [
+      'intro_scene/firefly/firefly-1.png',
+      'intro_scene/firefly/firefly-2.png',
+      'intro_scene/firefly/firefly-3.png',
+      'intro_scene/firefly/firefly-4.png',
+      'intro_scene/firefly/firefly-5.png',
+    ];
+    const fireflyTextureSeq: Array<Texture> = [];
+    for (let i = 0; i < fireflySeq.length; i++) {
+      const tex = Texture.from(fireflySeq[i]);
+      fireflyTextureSeq.push(tex);
     }
+    this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
+    this.cursorFirefly.play();
+    this.cursorFirefly.animationSpeed = 0.05;
 
-    public addText(): void {
-        if (this.numClicks === 0) {
-            this.text.position.set(36, 98);
-            this.text.alpha = 0;
-            this.hover.position.set(36, 732);
-            this.hover.alpha = 0;
-            this.mainContainer.addChild(this.text);
-            this.mainContainer.addChild(this.hover);
-            gsap.to(this.text, { alpha: 1, duration: 0.3 });
-            gsap.to(this.hover, { alpha: 1, duration: 0.3 });
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks === 1) {
-            gsap.to(this.hover, {
-                alpha: 0, duration: 0.2,
-                onComplete: () => this.mainContainer.removeChild(this.hover)
-            });
-            gsap.to(this.text, {
-                alpha: 0, duration: 0.2,
-                onComplete: () => {
-                    this.text.texture = Texture.from('scene_9/Text 2.png');
-                    this.text.position.set(36, 99);
-                    gsap.to(this.text, { alpha: 1, duration: 0.3 });
-                }
-            });
-            const strongTiger = Sprite.from('scene_9/Strong.png');
-            strongTiger.position.set(920, 5);
-            strongTiger.alpha = 0;
-            this.mainContainer.addChild(strongTiger);
-            gsap.to(strongTiger, { alpha: 1, duration: 0.3 });
-            gsap.to(this.rButton, {
-                alpha: 1, duration: 0.3, delay: 0.5,
-                onComplete: () => { this.rButton.interactive = true; }
-            });
-            this.numClicks++;
-            return;
-        }
+    this.mainContainer.position.set(148, 150);
+
+    this.mainContainer.addChild(this.cursorFirefly);
+    this.mainContainer.interactive = true;
+    this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
+
+    this.addChild(this.mainContainer);
+    this.addButtons();
+  }
+
+  public addText(): void {
+    if (this.numClicks === 0) {
+      this.text.position.set(36, 98);
+      this.text.alpha = 0;
+      this.hover.position.set(36, 732);
+      this.hover.alpha = 0;
+      this.mainContainer.addChild(this.text);
+      this.mainContainer.addChild(this.hover);
+      gsap.to(this.text, { alpha: 1, duration: 0.3 });
+      gsap.to(this.hover, { alpha: 1, duration: 0.3 });
+      this.numClicks++;
+      return;
     }
-
-    public goNext(_event: Event): void {
-        let nextScene: IScene = new Scene10;
-        Manager.changeScene(nextScene);
+    if (this.numClicks === 1) {
+      gsap.to(this.hover, {
+        alpha: 0,
+        duration: 0.2,
+        onComplete: () => this.mainContainer.removeChild(this.hover),
+      });
+      gsap.to(this.text, {
+        alpha: 0,
+        duration: 0.2,
+        onComplete: () => {
+          this.text.texture = Texture.from('scene_9/Text 2.png');
+          this.text.position.set(36, 99);
+          gsap.to(this.text, { alpha: 1, duration: 0.3 });
+        },
+      });
+      gsap.to(this.strongTiger, { alpha: 1, duration: 0.3 });
+      gsap.to(this.rButton, {
+        alpha: 1,
+        duration: 0.3,
+        delay: 0.5,
+        onComplete: () => {
+          this.rButton.interactive = true;
+        },
+      });
+      this.numClicks++;
+      return;
     }
+  }
 
-    public goPrev(_event: Event): void {
-        let prevScene: IScene = new Scene8;
-        Manager.changeScene(prevScene);
-    }
+  public goNext(_event: Event): void {
+    let nextScene: IScene = new Scene10();
+    Manager.changeScene(nextScene);
+  }
 
-    public update(_delta: number): void {
-        this.cursorFirefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-        this.cursorFirefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-    }
+  public goPrev(_event: Event): void {
+    let prevScene: IScene = new Scene8();
+    Manager.changeScene(prevScene);
+  }
 
-    public moveCursorFirefly(e: InteractionEvent): void {
-        const globalPos: Point = e.data.global;
-        const localPos: Point = this.mainContainer.toLocal(globalPos);
+  public update(_delta: number): void {
+    this.cursorFirefly.x +=
+      2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+    this.cursorFirefly.y +=
+      2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+  }
 
-        const x_off = 20;
-        const y_off = 20;
+  public moveCursorFirefly(e: InteractionEvent): void {
+    const globalPos: Point = e.data.global;
+    const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
-    }
+    const x_off = 20;
+    const y_off = 20;
 
-    public addButtons(): void {
-        const rButtonDefault = Texture.from('rbutton/Forward.png');
-        const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
-        const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
+    this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
+  }
 
-        this.rButton.texture = rButtonDefault;
-        this.rButton.position.set(1800, 960);
-        
-        // interactivity
-        this.rButton.buttonMode = true;
-        this.rButton.interactive = false;
-        this.rButton.alpha = 0;
-        this.rButton.on('pointerover', (_event) => {
-            this.rButton.texture = rButtonHover;
-        });
-        this.rButton.on('pointerout', (_event) => {
-            this.rButton.texture = rButtonDefault;
-        })
-        this.rButton.on('pointerdown', (_event) => {
-            this.rButton.texture = rButtonClicked;
-            this.goNext(_event);
-        });
+  public addButtons(): void {
+    const rButtonDefault = Texture.from('rbutton/Forward.png');
+    const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
+    const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
 
-        const lButton = new Sprite();
-        const lButtonDefault = Texture.from('lbutton/Back.png');
-        const lButtonHover = Texture.from('lbutton/Back_Hover.png');
-        const lButtonClicked = Texture.from('lbutton/Back_Clicked.png');
+    this.rButton.texture = rButtonDefault;
+    this.rButton.position.set(1800, 960);
 
-        lButton.texture = lButtonDefault;
-        lButton.position.set(50, 960);
-        
-        // interactivity
-        lButton.buttonMode = true;
-        lButton.interactive = true;
-        lButton.on('pointerover', (_event) => {
-            lButton.texture = lButtonHover;
-        });
-        lButton.on('pointerout', (_event) => {
-            lButton.texture = lButtonDefault;
-        })
-        lButton.on('pointerdown', (_event) => {
-            lButton.texture = lButtonClicked;
-            this.goPrev(_event);
-        });
+    // interactivity
+    this.rButton.buttonMode = true;
+    this.rButton.interactive = false;
+    this.rButton.alpha = 0;
+    this.rButton.on('pointerover', (_event) => {
+      this.rButton.texture = rButtonHover;
+    });
+    this.rButton.on('pointerout', (_event) => {
+      this.rButton.texture = rButtonDefault;
+    });
+    this.rButton.on('pointerdown', (_event) => {
+      this.rButton.texture = rButtonClicked;
+      this.goNext(_event);
+    });
 
-        this.addChild(this.rButton);
-        this.addChild(lButton);
-    }
+    const lButton = new Sprite();
+    const lButtonDefault = Texture.from('lbutton/Back.png');
+    const lButtonHover = Texture.from('lbutton/Back_Hover.png');
+    const lButtonClicked = Texture.from('lbutton/Back_Clicked.png');
+
+    lButton.texture = lButtonDefault;
+    lButton.position.set(50, 960);
+
+    // interactivity
+    lButton.buttonMode = true;
+    lButton.interactive = true;
+    lButton.on('pointerover', (_event) => {
+      lButton.texture = lButtonHover;
+    });
+    lButton.on('pointerout', (_event) => {
+      lButton.texture = lButtonDefault;
+    });
+    lButton.on('pointerdown', (_event) => {
+      lButton.texture = lButtonClicked;
+      this.goPrev(_event);
+    });
+
+    this.addChild(this.rButton);
+    this.addChild(lButton);
+  }
 }
