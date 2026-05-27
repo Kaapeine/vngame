@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { Scene11 } from "./Scene11";
@@ -31,25 +32,41 @@ export class Scene12 extends Container implements IScene {
         this.mainContainer.addChild(lake);
         lake.interactive = true;
         lake.on('pointerdown', () => {
-            if (this.enableLake == true) {
-                clearWater.visible = true;
-                lake.visible = false;
-
-                this.text1.texture = Texture.from('scene_12/Text3.png');
-                this.text1.position.set(124, 190);
-
-                this.instructions.texture = Texture.from('scene_12/Text4.png');
-                this.instructions.position.set(851, 190);
-                
-                this.mainContainer.removeChild(this.goddess);
-                this.rButton.visible = true;
+            if (this.enableLake) {
+                this.enableLake = false;
+                gsap.to(lake, { alpha: 0, duration: 0.3, onComplete: () => { lake.visible = false; } });
+                gsap.to(clearWater, { alpha: 1, duration: 0.3 });
+                gsap.to(this.text1, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.text1.texture = Texture.from('scene_12/Text3.png');
+                        this.text1.position.set(124, 190);
+                        gsap.to(this.text1, { alpha: 1, duration: 0.3 });
+                    }
+                });
+                gsap.to(this.instructions, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.instructions.texture = Texture.from('scene_12/Text4.png');
+                        this.instructions.position.set(851, 190);
+                        gsap.to(this.instructions, { alpha: 1, duration: 0.3 });
+                    }
+                });
+                gsap.to(this.goddess, {
+                    alpha: 0, duration: 0.3,
+                    onComplete: () => this.mainContainer.removeChild(this.goddess)
+                });
+                gsap.to(this.rButton, {
+                    alpha: 1, duration: 0.3, delay: 0.5,
+                    onComplete: () => { this.rButton.interactive = true; }
+                });
             }
         })
 
         let clearWater: Sprite = Sprite.from('scene_12/Clear Water (hidden).png');
         clearWater.position.set(0, 462);
         this.mainContainer.addChild(clearWater);
-        clearWater.visible = false;
+        clearWater.alpha = 0;
 
         let trees: Sprite = Sprite.from('scene_12/Trees.png');
         this.mainContainer.addChild(trees);
@@ -69,9 +86,9 @@ export class Scene12 extends Container implements IScene {
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -85,27 +102,33 @@ export class Scene12 extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
     public addText(): void {
-        if (this.numClicks == 0) {
+        if (this.numClicks === 0) {
             this.text1.position.set(263, 621);
+            this.text1.alpha = 0;
             this.mainContainer.addChild(this.text1);
+            gsap.to(this.text1, { alpha: 1, duration: 0.3 });
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 1) {
-            this.text1.position.set(265, 606);
-            this.text1.texture = Texture.from('scene_12/Text2.png');
-    
+        if (this.numClicks === 1) {
+            gsap.to(this.text1, {
+                alpha: 0, duration: 0.2,
+                onComplete: () => {
+                    this.text1.texture = Texture.from('scene_12/Text2.png');
+                    this.text1.position.set(265, 606);
+                    gsap.to(this.text1, { alpha: 1, duration: 0.3 });
+                }
+            });
             this.instructions.texture = Texture.from('scene_12/click.png');
             this.instructions.position.set(1205, 547);
+            this.instructions.alpha = 0;
             this.mainContainer.addChild(this.instructions);
-
+            gsap.to(this.instructions, { alpha: 1, duration: 0.3 });
             this.enableLake = true;
-
             this.numClicks++;
             return;
         }
@@ -127,11 +150,11 @@ export class Scene12 extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -146,8 +169,8 @@ export class Scene12 extends Container implements IScene {
         
         // interactivity
         this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
+        this.rButton.interactive = false;
+        this.rButton.alpha = 0;
         this.rButton.on('pointerover', (_event) => {
             this.rButton.texture = rButtonHover;
         });
@@ -183,10 +206,5 @@ export class Scene12 extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

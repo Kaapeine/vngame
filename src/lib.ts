@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { DisplayObject, Sprite, Point, InteractionEvent, Container } from "pixi.js";
 
 export function checkCollision(objA: DisplayObject, objB: DisplayObject): boolean {
@@ -17,10 +18,10 @@ export function checkCollision(objA: DisplayObject, objB: DisplayObject): boolea
     return topmostBottom > bottommostTop;
 }
 
-export class dragSprite {
+export class DragSprite {
 
     public sprite: Sprite;
-    public destroyOnCollision: Boolean = true;
+    public destroyOnCollision: boolean = true;
     public collisionObj: DisplayObject;
 
     constructor(path: string, mainContainer: Container, collisionObj: DisplayObject) {
@@ -36,8 +37,8 @@ export class dragSprite {
         let Drag = false;
 
         this.sprite.on('pointerdown', (e: InteractionEvent) => {
-            let globalPos: Point = e.data.global;
-            let localPos: Point = mainContainer.toLocal(globalPos);
+            const globalPos: Point = e.data.global;
+            const localPos: Point = mainContainer.toLocal(globalPos);
             xoff = this.sprite.position.x - localPos.x;
             yoff = this.sprite.position.y - localPos.y;
             this.sprite.position.set(localPos.x+xoff, localPos.y+yoff);
@@ -45,8 +46,8 @@ export class dragSprite {
         })
         this.sprite.on('pointermove', (e: InteractionEvent) => {
             if (Drag) {
-                let globalPos: Point = e.data.global;
-                let localPos: Point = mainContainer.toLocal(globalPos);
+                const globalPos: Point = e.data.global;
+                const localPos: Point = mainContainer.toLocal(globalPos);
                 this.sprite.position.set(localPos.x+xoff, localPos.y+yoff);
             }
         })
@@ -54,7 +55,11 @@ export class dragSprite {
             Drag = false;
             if (this.destroyOnCollision) {
                 if (checkCollision(this.collisionObj, this.sprite)) {
-                    this.sprite.destroy();
+                    gsap.to(this.sprite, {
+                        alpha: 0,
+                        duration: 0.3,
+                        onComplete: () => this.sprite.destroy(),
+                    });
                 }
             }
         })

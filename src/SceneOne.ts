@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, Point, InteractionEvent, AnimatedSprite } from "pixi.js";
 import { IntroScene } from "./IntroScene";
 import { IScene, Manager } from "./Manager";
@@ -18,9 +19,9 @@ export class SceneOne extends Container implements IScene {
         super();
 
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -56,15 +57,14 @@ export class SceneOne extends Container implements IScene {
 
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
     public addRain(): void {
         const rainSeq: Array<string> = ['scene_one/rain/rain-1.png', 'scene_one/rain/rain-2.png', 'scene_one/rain/rain-3.png'];
-        let rainTextureSeq: Array<Texture> = [];
+        const rainTextureSeq: Array<Texture> = [];
         for (let i = 0; i < rainSeq.length; i++) {
-            let tex = Texture.from(rainSeq[i]);
+            const tex = Texture.from(rainSeq[i]);
             rainTextureSeq.push(tex);
         }
         const rain: AnimatedSprite = new AnimatedSprite(rainTextureSeq);
@@ -74,30 +74,52 @@ export class SceneOne extends Container implements IScene {
     }
 
     public showJackal(_event: Event): void {
-        if (this.numClicks == 0) {
-            let jackal: Sprite = Sprite.from('scene_one/jackal_new.png');
+        if (this.numClicks === 0) {
+            const jackal: Sprite = Sprite.from('scene_one/jackal_new.png');
             jackal.position.set(1075, 537);
+            jackal.alpha = 0;
             this.mainContainer.addChild(jackal);
+            gsap.to(jackal, { alpha: 1, duration: 0.3 });
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 1) {
+        if (this.numClicks === 1) {
             this.text1.position.set(80, 200);
+            this.text1.alpha = 0;
             this.mainContainer.addChild(this.text1);
+            gsap.to(this.text1, { alpha: 1, duration: 0.3 });
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 2) {
-            this.mainContainer.removeChild(this.text1);
+        if (this.numClicks === 2) {
+            gsap.to(this.text1, {
+                alpha: 0,
+                duration: 0.2,
+                onComplete: () => this.mainContainer.removeChild(this.text1)
+            });
             this.text2.position.set(720, 45);
+            this.text2.alpha = 0;
             this.mainContainer.addChild(this.text2);
+            gsap.to(this.text2, { alpha: 1, duration: 0.3 });
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 3){
-            this.text2.texture = Texture.from('scene_one/Text3.png');
+        if (this.numClicks === 3) {
+            gsap.to(this.text2, {
+                alpha: 0,
+                duration: 0.2,
+                onComplete: () => {
+                    this.text2.texture = Texture.from('scene_one/Text3.png');
+                    gsap.to(this.text2, { alpha: 1, duration: 0.3 });
+                }
+            });
+            gsap.to(this.rButton, {
+                alpha: 1,
+                duration: 0.3,
+                delay: 0.5,
+                onComplete: () => { this.rButton.interactive = true; }
+            });
             this.numClicks++;
-            this.rButton.visible = true;
             return;
         }
     }
@@ -117,11 +139,11 @@ export class SceneOne extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -136,8 +158,8 @@ export class SceneOne extends Container implements IScene {
         
         // interactivity
         this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
+        this.rButton.interactive = false;
+        this.rButton.alpha = 0;
         this.rButton.on('pointerover', (_event) => {
             this.rButton.texture = rButtonHover;
         });
@@ -173,10 +195,5 @@ export class SceneOne extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

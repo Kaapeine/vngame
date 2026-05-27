@@ -28,22 +28,20 @@ export class TitleScene extends Container implements IScene {
         this.addChild(this.titleContainer);
 
         this.addHeart();
-        this.addFrame();
     }
 
     public addHeart(): void {
         const heartSequence: Array<string> = ["title_screen/heart/1.png", "title_screen/heart/2.png", "title_screen/heart/3.png", "title_screen/heart/4.png"];
-        let heartTextureSequence: Array<Texture> = [];
+        const heartTextureSequence: Array<Texture> = [];
         for (let i = 0; i < heartSequence.length; i++){
             // console.log(i);
-            let tex = Texture.from(heartSequence[i]);
+            const tex = Texture.from(heartSequence[i]);
             heartTextureSequence.push(tex);
         }
-        console.log("Size: ", heartTextureSequence.length);
         const heart: AnimatedSprite = new AnimatedSprite(heartTextureSequence);
 
-        let globalPos: Point = new Point(1110, 490);
-        let localPos: Point = this.titleContainer.toLocal(globalPos);
+        const globalPos: Point = new Point(1110, 490);
+        const localPos: Point = this.titleContainer.toLocal(globalPos);
         heart.position.set(localPos.x, localPos.y);
 
         heart.play();
@@ -59,17 +57,10 @@ export class TitleScene extends Container implements IScene {
         Manager.changeScene(new IntroScene);
     }
 
-    public goPrev(_event: Event): void {
-        alert('hi');
-    }
+    public goPrev(_event: Event): void {}
 
     public update(_delta: number): void {
         // this.leavesAngle += 0.01;
         // this.leaves.rotation = this.leavesAngle;
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

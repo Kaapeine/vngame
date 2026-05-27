@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { Scene12 } from "./Scene12";
@@ -5,152 +6,170 @@ import { Scene14 } from "./Scene14";
 
 
 export class Scene13 extends Container implements IScene {
+  private mainContainer: Container = new Container();
+  private cursorFirefly: AnimatedSprite;
 
-    private mainContainer: Container = new Container();
-    private cursorFirefly: AnimatedSprite;
+  private numClicks: number = 0;
 
-    private numClicks: number = 0;
+  private rButton: Sprite = new Sprite();
 
-    private rButton: Sprite = new Sprite();
+  constructor() {
+    super();
 
+    let bg: Sprite = Sprite.from('scene_13/Background.png');
+    bg.position.set(0, -151);
+    this.mainContainer.addChild(bg);
 
-    constructor() {
-        super();
+    let glow: AnimatedSprite = AnimatedSprite.fromImages([
+      'scene_13/glow/Scene13GoddessGlow1.png',
+      'scene_13/glow/Scene13GoddessGlow2.png',
+      'scene_13/glow/Scene13GoddessGlow3.png',
+      'scene_13/glow/Scene13GoddessGlow4.png',
+    ]);
+    glow.play();
+    glow.animationSpeed = 0.05;
+    glow.position.set(0, 0);
+    // glow.scale.set(1.03, 1.03);
+    this.mainContainer.addChild(glow);
 
-        let bg: Sprite = Sprite.from('scene_13/Background.png');
-        bg.position.set(0, -151);
-        this.mainContainer.addChild(bg);
+    this.mainContainer.on('pointerdown', this.addText, this);
 
-        let glow: AnimatedSprite = AnimatedSprite.fromImages(['scene_13/glow/Scene13GoddessGlow1.png', 'scene_13/glow/Scene13GoddessGlow2.png', 'scene_13/glow/Scene13GoddessGlow3.png', 'scene_13/glow/Scene13GoddessGlow4.png'])
-        glow.play();
-        glow.animationSpeed = 0.05;
-        glow.position.set(0, 0);
-        // glow.scale.set(1.03, 1.03);
-        this.mainContainer.addChild(glow);
-
-        this.mainContainer.on('pointerdown', this.addText, this);
-
-        // FOOTER
-        const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
-        for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
-            fireflyTextureSeq.push(tex);
-        }
-        this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
-        this.cursorFirefly.play();
-        this.cursorFirefly.animationSpeed = 0.05;
-
-        this.mainContainer.position.set(148, 150);
-
-        this.mainContainer.addChild(this.cursorFirefly);
-        this.mainContainer.interactive = true;
-        this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
-
-        this.addChild(this.mainContainer);
-        this.addFrame();
-
-        let malati: Sprite = Sprite.from('scene_13/Malati.png');
-        malati.position.set(378+150, 0);
-        this.addChild(malati);
-
-        this.addButtons();
+    // FOOTER
+    const fireflySeq: Array<string> = [
+      'intro_scene/firefly/firefly-1.png',
+      'intro_scene/firefly/firefly-2.png',
+      'intro_scene/firefly/firefly-3.png',
+      'intro_scene/firefly/firefly-4.png',
+      'intro_scene/firefly/firefly-5.png',
+    ];
+    const fireflyTextureSeq: Array<Texture> = [];
+    for (let i = 0; i < fireflySeq.length; i++) {
+      const tex = Texture.from(fireflySeq[i]);
+      fireflyTextureSeq.push(tex);
     }
+    this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
+    this.cursorFirefly.play();
+    this.cursorFirefly.animationSpeed = 0.05;
 
-    public addText(): void {
-        if (this.numClicks == 0) {
-            let text1: Sprite = Sprite.from('scene_13/Text1.png');
-            text1.position.set(36, 319-150);
-            this.mainContainer.addChild(text1);
-            this.numClicks++;
-            return;
-        }
-        if (this.numClicks == 1) {
-            let text1: Sprite = Sprite.from('scene_13/Text2.png');
-            text1.position.set(1145, 667-120);
-            this.mainContainer.addChild(text1);
-            this.numClicks++;
-            this.rButton.visible = true;
-            return;
-        }
+    this.mainContainer.position.set(148, 150);
+
+    this.mainContainer.addChild(this.cursorFirefly);
+    this.mainContainer.interactive = true;
+    this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
+
+    this.addChild(this.mainContainer);
+
+    let malati: Sprite = Sprite.from('scene_13/Malati.png');
+    malati.position.set(378 + 150, 0);
+    this.addChild(malati);
+
+    this.addFrame();
+    this.addButtons();
+  }
+
+  public addText(): void {
+    if (this.numClicks === 0) {
+      const text1: Sprite = Sprite.from('scene_13/Text1.png');
+      text1.position.set(36, 319 - 150);
+      text1.alpha = 0;
+      this.mainContainer.addChild(text1);
+      gsap.to(text1, { alpha: 1, duration: 0.3 });
+      this.numClicks++;
+      return;
     }
-
-    public goNext(_event: Event): void {
-        let nextScene: IScene = new Scene14;
-        Manager.changeScene(nextScene);
+    if (this.numClicks === 1) {
+      const text2: Sprite = Sprite.from('scene_13/Text2.png');
+      text2.position.set(1145, 667 - 120);
+      text2.alpha = 0;
+      this.mainContainer.addChild(text2);
+      gsap.to(text2, { alpha: 1, duration: 0.3 });
+      gsap.to(this.rButton, {
+        alpha: 1, duration: 0.3, delay: 0.3,
+        onComplete: () => { this.rButton.interactive = true; }
+      });
+      this.numClicks++;
+      return;
     }
+  }
 
-    public goPrev(_event: Event): void {
-        let prevScene: IScene = new Scene12;
-        Manager.changeScene(prevScene);
-    }
+  public goNext(_event: Event): void {
+    let nextScene: IScene = new Scene14();
+    Manager.changeScene(nextScene);
+  }
 
-    public update(_delta: number): void {
-        this.cursorFirefly.x += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-        this.cursorFirefly.y += 2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-    }
+  public goPrev(_event: Event): void {
+    let prevScene: IScene = new Scene12();
+    Manager.changeScene(prevScene);
+  }
 
-    public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+  public update(_delta: number): void {
+    this.cursorFirefly.x +=
+      2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+    this.cursorFirefly.y +=
+      2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
+  }
 
-        let x_off = 20;
-        let y_off = 20;
+  public moveCursorFirefly(e: InteractionEvent): void {
+    const globalPos: Point = e.data.global;
+    const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
-    }
+    const x_off = 20;
+    const y_off = 20;
 
-    public addButtons(): void {
-        const rButtonDefault = Texture.from('rbutton/Forward.png');
-        const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
-        const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
+    this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
+  }
 
-        this.rButton.texture = rButtonDefault;
-        this.rButton.position.set(1800, 960);
-        
-        // interactivity
-        this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
-        this.rButton.on('pointerover', (_event) => {
-            this.rButton.texture = rButtonHover;
-        });
-        this.rButton.on('pointerout', (_event) => {
-            this.rButton.texture = rButtonDefault;
-        })
-        this.rButton.on('pointerdown', (_event) => {
-            this.rButton.texture = rButtonClicked;
-            this.goNext(_event);
-        });
+  public addFrame(): void {
+    const bgFrame: Sprite = Sprite.from('frame.png');
+    this.addChild(bgFrame);
+  }
 
-        const lButton = new Sprite();
-        const lButtonDefault = Texture.from('lbutton/Back.png');
-        const lButtonHover = Texture.from('lbutton/Back_Hover.png');
-        const lButtonClicked = Texture.from('lbutton/Back_Clicked.png');
+  public addButtons(): void {
+    const rButtonDefault = Texture.from('rbutton/Forward.png');
+    const rButtonHover = Texture.from('rbutton/Forward_Hover.png');
+    const rButtonClicked = Texture.from('rbutton/Forward_Clicked.png');
 
-        lButton.texture = lButtonDefault;
-        lButton.position.set(50, 960);
-        
-        // interactivity
-        lButton.buttonMode = true;
-        lButton.interactive = true;
-        lButton.on('pointerover', (_event) => {
-            lButton.texture = lButtonHover;
-        });
-        lButton.on('pointerout', (_event) => {
-            lButton.texture = lButtonDefault;
-        })
-        lButton.on('pointerdown', (_event) => {
-            lButton.texture = lButtonClicked;
-            this.goPrev(_event);
-        });
+    this.rButton.texture = rButtonDefault;
+    this.rButton.position.set(1800, 960);
 
-        this.addChild(this.rButton);
-        this.addChild(lButton);
-    }
+    // interactivity
+    this.rButton.buttonMode = true;
+    this.rButton.interactive = false;
+    this.rButton.alpha = 0;
+    this.rButton.on('pointerover', (_event) => {
+      this.rButton.texture = rButtonHover;
+    });
+    this.rButton.on('pointerout', (_event) => {
+      this.rButton.texture = rButtonDefault;
+    });
+    this.rButton.on('pointerdown', (_event) => {
+      this.rButton.texture = rButtonClicked;
+      this.goNext(_event);
+    });
 
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
-    }
+    const lButton = new Sprite();
+    const lButtonDefault = Texture.from('lbutton/Back.png');
+    const lButtonHover = Texture.from('lbutton/Back_Hover.png');
+    const lButtonClicked = Texture.from('lbutton/Back_Clicked.png');
+
+    lButton.texture = lButtonDefault;
+    lButton.position.set(50, 960);
+
+    // interactivity
+    lButton.buttonMode = true;
+    lButton.interactive = true;
+    lButton.on('pointerover', (_event) => {
+      lButton.texture = lButtonHover;
+    });
+    lButton.on('pointerout', (_event) => {
+      lButton.texture = lButtonDefault;
+    });
+    lButton.on('pointerdown', (_event) => {
+      lButton.texture = lButtonClicked;
+      this.goPrev(_event);
+    });
+
+    this.addChild(this.rButton);
+    this.addChild(lButton);
+  }
 }

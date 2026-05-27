@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { EndScene } from "./EndScene";
 import { IScene, Manager } from "./Manager";
@@ -20,25 +21,36 @@ export class Credits extends Container implements IScene {
         let layer2: Sprite = Sprite.from('credits/Text2 copy 4.png');
         let layer3: Sprite = Sprite.from('credits/Text2 copy 5.png');
 
+        layer1.position.set(696, 256);
+        this.mainContainer.addChild(layer1);
+
         this.mainContainer.on('pointerdown', () => {
-            if (this.numClicks == 0) {
-                layer1.position.set(696, 256);
-                this.mainContainer.addChild(layer1);
+            if (this.numClicks === 0) {
                 this.numClicks++;
+                gsap.to(layer1, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.mainContainer.removeChild(layer1);
+                        layer2.position.set(725, 342);
+                        layer2.alpha = 0;
+                        this.mainContainer.addChild(layer2);
+                        gsap.to(layer2, { alpha: 1, duration: 0.3 });
+                    }
+                });
                 return;
             }
-            if (this.numClicks == 1) {
-                this.mainContainer.removeChild(layer1);
-                layer2.position.set(725, 342);
-                this.mainContainer.addChild(layer2);
+            if (this.numClicks === 1) {
                 this.numClicks++;
-                return;
-            }
-            if (this.numClicks == 2) {
-                this.mainContainer.removeChild(layer2);
-                layer3.position.set(695, 266);
-                this.mainContainer.addChild(layer3);
-                this.numClicks++;
+                gsap.to(layer2, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.mainContainer.removeChild(layer2);
+                        layer3.position.set(695, 266);
+                        layer3.alpha = 0;
+                        this.mainContainer.addChild(layer3);
+                        gsap.to(layer3, { alpha: 1, duration: 0.3 });
+                    }
+                });
                 return;
             }
         })
@@ -46,9 +58,9 @@ export class Credits extends Container implements IScene {
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -62,7 +74,6 @@ export class Credits extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
@@ -80,11 +91,11 @@ export class Credits extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -136,10 +147,5 @@ export class Credits extends Container implements IScene {
 
         // this.addChild(rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

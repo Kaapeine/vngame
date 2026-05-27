@@ -36,7 +36,6 @@ export class IntroScene extends Container implements IScene {
 
         this.mainContainer.position.set(148, 150);
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
 
         this.mainContainer.interactive = true;
@@ -56,26 +55,23 @@ export class IntroScene extends Container implements IScene {
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
         for (let i = 0; i < fireflySeq.length; i++){
             // console.log(i);
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
 
         const revFireflySeq: Array<string> = ['intro_scene/rev_firefly/RevFirefly-1.png', 'intro_scene/rev_firefly/RevFirefly-2.png', 'intro_scene/rev_firefly/RevFirefly-3.png', 'intro_scene/rev_firefly/RevFirefly-4.png', 'intro_scene/rev_firefly/RevFirefly-5.png'];
         for (let i = 0; i < revFireflySeq.length; i++){
             // console.log(i);
-            let tex = Texture.from(revFireflySeq[i]);
+            const tex = Texture.from(revFireflySeq[i]);
             revFireflyTextureSeq.push(tex);
         }
 
         for (let i  = 0; i < this.numFireflies; ++i) {
-            let rnd: number = Math.random();
-            if (rnd < 0.5) {
-                var firefly: AnimatedSprite = new AnimatedSprite(fireflyTextureSeq);
-            }
-            else {
-                var firefly: AnimatedSprite = new AnimatedSprite(revFireflyTextureSeq);
-            }
-            let theta = rnd * Math.PI * 2;
+            const rnd: number = Math.random();
+            const firefly: AnimatedSprite = new AnimatedSprite(
+                rnd < 0.5 ? fireflyTextureSeq : revFireflyTextureSeq
+            );
+            const theta = rnd * Math.PI * 2;
             // let x: number = Math.random() * 1626;
             // let y: number = Math.random() * 781;
             let x: number = (this.a1 + Math.random() * (this.a2 - this.a1)) * Math.cos(theta) + 1626/2;
@@ -162,7 +158,7 @@ export class IntroScene extends Container implements IScene {
             if (firefly.x >= 1626 || firefly.x <= 0 || firefly.y >= 781 || firefly.y <= 0) {
 
                 // RANDOM RESPAWN
-                let theta: number = Math.random() * Math.PI * 2;
+                const theta: number = Math.random() * Math.PI * 2;
                 let x: number = (this.a1 + Math.random() * (this.a2 - this.a1)) * Math.cos(theta) + 1626/2;
                 let y: number = (this.b1 + Math.random() * (this.b2 - this.b1)) * Math.sin(theta) + 781/2;
                 firefly.position.set(x, y);
@@ -176,13 +172,13 @@ export class IntroScene extends Container implements IScene {
 
     public moveFireflies(e: InteractionEvent): void {
         let pos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(pos);
+        const localPos: Point = this.mainContainer.toLocal(pos);
 
         for (let i = 0; i < this.numFireflies; ++i) {
             const firefly: AnimatedSprite = this.fireflyArray[i];
-            let dist = this.getDist(localPos, firefly.position);
+            const dist = this.getDist(localPos, firefly.position);
             if (dist < 150) {
-                let theta: number = this.getAngle(localPos, firefly.position);
+                const theta: number = this.getAngle(localPos, firefly.position);
                 firefly.x += 3 * Math.cos(theta);
                 firefly.y += 3 * Math.sin(theta);
             }
@@ -195,10 +191,5 @@ export class IntroScene extends Container implements IScene {
 
     public getAngle(p1: Point, p2: Point): number {
         return Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

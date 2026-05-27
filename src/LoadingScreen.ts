@@ -9,7 +9,7 @@ export class LoadingScreen extends Container implements IScene {
   private cursorFirefly: AnimatedSprite;
   private spinner: Sprite;
 
-  constructor() {
+  constructor(private nextScene: (() => IScene) | null = null) {
     super();
 
     Manager.loop1.play();
@@ -22,13 +22,16 @@ export class LoadingScreen extends Container implements IScene {
       'intro_scene/firefly/firefly-4.png',
       'intro_scene/firefly/firefly-5.png',
     ];
-    let fireflyTextureSeq: Array<Texture> = [];
+    const fireflyTextureSeq: Array<Texture> = [];
     for (let i = 0; i < fireflySeq.length; i++) {
       fireflyTextureSeq.push(Texture.from(fireflySeq[i]));
     }
     this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
     this.cursorFirefly.play();
     this.cursorFirefly.animationSpeed = 0.05;
+
+    const introBg: Sprite = Sprite.from('intro_scene/Intro.jpg');
+    this.mainContainer.addChild(introBg);
 
     this.mainContainer.position.set(148, 150);
     this.mainContainer.addChild(this.cursorFirefly);
@@ -45,10 +48,9 @@ export class LoadingScreen extends Container implements IScene {
     this.mainContainer.addChild(loadingText);
 
     this.addChild(this.mainContainer);
-    this.addFrame();
 
     Loader.shared.add(ASSETS).load(() => {
-      Manager.changeScene(new TitleScene());
+      Manager.changeScene(this.nextScene ? this.nextScene() : new TitleScene());
     });
   }
 
@@ -66,9 +68,4 @@ export class LoadingScreen extends Container implements IScene {
 
   public goNext(_event: Event): void {}
   public goPrev(_event: Event): void {}
-
-  public addFrame(): void {
-    const bgFrame: Sprite = Sprite.from('frame.png');
-    this.addChild(bgFrame);
-  }
 }

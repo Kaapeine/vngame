@@ -14,9 +14,9 @@ export class SCENENAME extends Container implements IScene {
         super();
 
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -30,7 +30,6 @@ export class SCENENAME extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
@@ -48,11 +47,11 @@ export class SCENENAME extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -104,10 +103,5 @@ export class SCENENAME extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

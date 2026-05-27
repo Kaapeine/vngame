@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { Scene11 } from "./Scene11";
@@ -34,9 +35,9 @@ export class Scene10 extends Container implements IScene {
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -50,19 +51,21 @@ export class Scene10 extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
     public addText(): void {
-        if (this.numClicks == 0) {
-            let text: Sprite = Sprite.from('scene_10/Text 1.png');
-            text.position.set(921, 65);
-            this.mainContainer.addChild(text);
+        if (this.numClicks === 0) {
             this.numClicks++;
-            this.rButton.visible = true;
-
-            return;
+            const text: Sprite = Sprite.from('scene_10/Text 1.png');
+            text.position.set(921, 65);
+            text.alpha = 0;
+            this.mainContainer.addChild(text);
+            gsap.to(text, { alpha: 1, duration: 0.3 });
+            gsap.to(this.rButton, {
+                alpha: 1, duration: 0.3, delay: 0.3,
+                onComplete: () => { this.rButton.interactive = true; }
+            });
         }
     }
 
@@ -82,11 +85,11 @@ export class Scene10 extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -101,8 +104,8 @@ export class Scene10 extends Container implements IScene {
         
         // interactivity
         this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
+        this.rButton.interactive = false;
+        this.rButton.alpha = 0;
         this.rButton.on('pointerover', (_event) => {
             this.rButton.texture = rButtonHover;
         });
@@ -138,10 +141,5 @@ export class Scene10 extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

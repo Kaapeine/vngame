@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { SceneFour } from "./SceneFour";
@@ -48,9 +49,9 @@ export class SceneFive extends Container implements IScene {
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -64,7 +65,6 @@ export class SceneFive extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
@@ -75,31 +75,63 @@ export class SceneFive extends Container implements IScene {
         jackal.interactive = true;
 
         jackal.on('pointerdown', () => {
-            if (this.numClicks == 0) {
-                jackal.texture = Texture.from('scene_five/Jackal2.png');
-                jackal.position.set(908, 556);
-
-                this.mainContainer.removeChild(this.ojackal);
-
-                this.text.texture = Texture.from('scene_five/Text 2.png');
-                this.text.position.set(943, 320);
-
-                this.callJackal.texture = Texture.from('scene_five/CLICK AGAIN!.png');
-                this.callJackal.position.set(1468, 735);
-
+            if (this.numClicks === 0) {
+                gsap.to(jackal, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        jackal.texture = Texture.from('scene_five/Jackal2.png');
+                        jackal.position.set(908, 556);
+                        gsap.to(jackal, { alpha: 1, duration: 0.3 });
+                    }
+                });
+                gsap.to(this.ojackal, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => this.mainContainer.removeChild(this.ojackal)
+                });
+                gsap.to(this.text, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.text.texture = Texture.from('scene_five/Text 2.png');
+                        this.text.position.set(943, 320);
+                        gsap.to(this.text, { alpha: 1, duration: 0.3 });
+                    }
+                });
+                gsap.to(this.callJackal, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.callJackal.texture = Texture.from('scene_five/CLICK AGAIN!.png');
+                        this.callJackal.position.set(1468, 735);
+                        gsap.to(this.callJackal, { alpha: 1, duration: 0.3 });
+                    }
+                });
                 this.numClicks++;
             }
-            else if (this.numClicks == 1) {
-                jackal.texture = Texture.from('scene_five/Jackal3.png');
-                jackal.position.set(448, 549);
-
-                this.mainContainer.removeChild(this.callJackal);
-
-                this.text.texture = Texture.from('scene_five/Text 3.png');
-                this.text.position.set(943, 319);
-                
+            else if (this.numClicks === 1) {
+                gsap.to(jackal, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        jackal.texture = Texture.from('scene_five/Jackal3.png');
+                        jackal.position.set(448, 549);
+                        gsap.to(jackal, { alpha: 1, duration: 0.3 });
+                    }
+                });
+                gsap.to(this.callJackal, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => this.mainContainer.removeChild(this.callJackal)
+                });
+                gsap.to(this.text, {
+                    alpha: 0, duration: 0.2,
+                    onComplete: () => {
+                        this.text.texture = Texture.from('scene_five/Text 3.png');
+                        this.text.position.set(943, 319);
+                        gsap.to(this.text, { alpha: 1, duration: 0.3 });
+                    }
+                });
+                gsap.to(this.rButton, {
+                    alpha: 1, duration: 0.3, delay: 0.5,
+                    onComplete: () => { this.rButton.interactive = true; }
+                });
                 this.numClicks++;
-                this.rButton.visible = true;
             }
         })
     }
@@ -120,11 +152,11 @@ export class SceneFive extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -139,8 +171,8 @@ export class SceneFive extends Container implements IScene {
         
         // interactivity
         this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
+        this.rButton.interactive = false;
+        this.rButton.alpha = 0;
         this.rButton.on('pointerover', (_event) => {
             this.rButton.texture = rButtonHover;
         });
@@ -176,10 +208,5 @@ export class SceneFive extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

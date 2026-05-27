@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { Scene8 } from "./Scene8";
@@ -48,9 +49,9 @@ export class SceneSeven extends Container implements IScene {
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -64,7 +65,6 @@ export class SceneSeven extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
@@ -89,36 +89,20 @@ export class SceneSeven extends Container implements IScene {
 
         rightBush.interactive = true;
         rightBush.on('pointerdown', () => {
-            this.layer1.removeChild(rightBush);
-            this.layer1.removeChild(rightTree);
+            rightBush.interactive = false;
+            gsap.to(rightBush, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(rightBush) });
+            gsap.to(rightTree, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(rightTree) });
             this.tick++;
-            if (this.tick == 4) {
-                this.layer1.removeChild(midTree);
-                this.mainContainer.removeChild(this.clearBush);
-                this.text.texture = Texture.from('scene_seven/Text 3.png');
-                this.text.position.set(1070, 30);
-
-                this.aami.texture = Texture.from('scene_seven/Layer3Aami.png');
-                this.aami.position.set(786, 504);
-                this.rButton.visible = true;
-            }
+            if (this.tick === 4) { this.onLayer2Complete(midTree); }
         })
 
         leftBush.interactive = true;
         leftBush.on('pointerdown', () => {
-            this.layer1.removeChild(leftBush);
-            this.layer1.removeChild(leftTree);
+            leftBush.interactive = false;
+            gsap.to(leftBush, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(leftBush) });
+            gsap.to(leftTree, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(leftTree) });
             this.tick++;
-            if (this.tick == 4) {
-                this.layer1.removeChild(midTree);
-                this.mainContainer.removeChild(this.clearBush);
-                this.text.texture = Texture.from('scene_seven/Text 3.png');
-                this.text.position.set(1070, 30);
-
-                this.aami.texture = Texture.from('scene_seven/Layer3Aami.png');
-                this.aami.position.set(786, 504);
-                this.rButton.visible = true;
-            }
+            if (this.tick === 4) { this.onLayer2Complete(midTree); }
         })
 
         this.mainContainer.addChild(this.layer1);
@@ -145,35 +129,68 @@ export class SceneSeven extends Container implements IScene {
 
         rightBush.interactive = true;
         rightBush.on('pointerdown', () => {
-            this.layer1.removeChild(rightBush);
-            this.layer1.removeChild(rightTree);
+            rightBush.interactive = false;
+            gsap.to(rightBush, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(rightBush) });
+            gsap.to(rightTree, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(rightTree) });
             this.tick++;
-            if (this.tick == 2) {
-                this.layer1.removeChild(midTree);
-                this.text.texture = Texture.from('scene_seven/Text 2.png');
-                this.text.position.set(549, 30);
-
-                this.aami.texture = Texture.from('scene_seven/Layer2Aami.png');
-                this.aami.position.set(741, 449);
-            }
+            if (this.tick === 2) { this.onLayer1Complete(midTree); }
         })
 
         leftBush.interactive = true;
         leftBush.on('pointerdown', () => {
-            this.layer1.removeChild(leftBush);
-            this.layer1.removeChild(leftTree);
+            leftBush.interactive = false;
+            gsap.to(leftBush, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(leftBush) });
+            gsap.to(leftTree, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(leftTree) });
             this.tick++;
-            if (this.tick == 2) {
-                this.layer1.removeChild(midTree);
-                this.text.texture = Texture.from('scene_seven/Text 2.png');
-                this.text.position.set(549, 30);
-
-                this.aami.texture = Texture.from('scene_seven/Layer2Aami.png');
-                this.aami.position.set(741, 449);
-            }
+            if (this.tick === 2) { this.onLayer1Complete(midTree); }
         })
         
         this.mainContainer.addChild(this.layer1);
+    }
+
+    private onLayer1Complete(midTree: Sprite): void {
+        gsap.to(midTree, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(midTree) });
+        gsap.to(this.text, {
+            alpha: 0, duration: 0.2,
+            onComplete: () => {
+                this.text.texture = Texture.from('scene_seven/Text 2.png');
+                this.text.position.set(549, 30);
+                gsap.to(this.text, { alpha: 1, duration: 0.3 });
+            }
+        });
+        gsap.to(this.aami, {
+            alpha: 0, duration: 0.2,
+            onComplete: () => {
+                this.aami.texture = Texture.from('scene_seven/Layer2Aami.png');
+                this.aami.position.set(741, 449);
+                gsap.to(this.aami, { alpha: 1, duration: 0.3 });
+            }
+        });
+    }
+
+    private onLayer2Complete(midTree: Sprite): void {
+        gsap.to(midTree, { alpha: 0, duration: 0.2, onComplete: () => this.layer1.removeChild(midTree) });
+        gsap.to(this.clearBush, { alpha: 0, duration: 0.2, onComplete: () => this.mainContainer.removeChild(this.clearBush) });
+        gsap.to(this.text, {
+            alpha: 0, duration: 0.2,
+            onComplete: () => {
+                this.text.texture = Texture.from('scene_seven/Text 3.png');
+                this.text.position.set(1070, 30);
+                gsap.to(this.text, { alpha: 1, duration: 0.3 });
+            }
+        });
+        gsap.to(this.aami, {
+            alpha: 0, duration: 0.2,
+            onComplete: () => {
+                this.aami.texture = Texture.from('scene_seven/Layer3Aami.png');
+                this.aami.position.set(786, 504);
+                gsap.to(this.aami, { alpha: 1, duration: 0.3 });
+            }
+        });
+        gsap.to(this.rButton, {
+            alpha: 1, duration: 0.3, delay: 0.5,
+            onComplete: () => { this.rButton.interactive = true; }
+        });
     }
 
     public goNext(_event: Event): void {
@@ -192,11 +209,11 @@ export class SceneSeven extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -211,8 +228,8 @@ export class SceneSeven extends Container implements IScene {
         
         // interactivity
         this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
+        this.rButton.interactive = false;
+        this.rButton.alpha = 0;
         this.rButton.on('pointerover', (_event) => {
             this.rButton.texture = rButtonHover;
         });
@@ -248,10 +265,5 @@ export class SceneSeven extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }

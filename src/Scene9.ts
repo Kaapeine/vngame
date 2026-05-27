@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import { Container, Texture, Sprite, AnimatedSprite, Point, InteractionEvent } from "pixi.js";
 import { IScene, Manager } from "./Manager";
 import { Scene10 } from "./Scene10";
@@ -34,6 +35,19 @@ export class Scene9 extends Container implements IScene {
         this.mainContainer.addChild(this.tiger);
 
         // HERBS
+        let titaphul: Sprite = Sprite.from('scene_9/Titaphul.png');
+        titaphul.position.set(1176, 595);
+        this.mainContainer.addChild(titaphul);
+        titaphul.interactive = true;
+        titaphul.on('pointerover', () => {
+          titaphul.texture = Texture.from('scene_9/Titaphul hovered.png');
+          titaphul.position.set(1154, 458);
+        });
+        titaphul.on('pointerout', () => {
+          titaphul.texture = Texture.from('scene_9/Titaphul.png');
+          titaphul.position.set(1176, 595);
+        });
+
         let kalmegh: Sprite = Sprite.from('scene_9/Kalmegh.png');
         kalmegh.position.set(1106, 660);
         this.mainContainer.addChild(kalmegh);
@@ -45,19 +59,6 @@ export class Scene9 extends Container implements IScene {
         kalmegh.on('pointerout', () => {
             kalmegh.texture = Texture.from('scene_9/Kalmegh.png');
             kalmegh.position.set(1106, 660);
-        })
-
-        let titaphul: Sprite = Sprite.from('scene_9/Titaphul.png');
-        titaphul.position.set(1176, 595);
-        this.mainContainer.addChild(titaphul);
-        titaphul.interactive = true;
-        titaphul.on('pointerover', () => {
-            titaphul.texture = Texture.from('scene_9/Titaphul hovered.png');
-            titaphul.position.set(1154, 458);
-        })
-        titaphul.on('pointerout', () => {
-            titaphul.texture = Texture.from('scene_9/Titaphul.png');
-            titaphul.position.set(1176, 595);
         })
 
         let nonatenga: Sprite = Sprite.from('scene_9/Nona tenga.png');
@@ -83,9 +84,9 @@ export class Scene9 extends Container implements IScene {
 
         // FOOTER
         const fireflySeq: Array<string> = ['intro_scene/firefly/firefly-1.png', 'intro_scene/firefly/firefly-2.png', 'intro_scene/firefly/firefly-3.png', 'intro_scene/firefly/firefly-4.png', 'intro_scene/firefly/firefly-5.png'];
-        let fireflyTextureSeq: Array<Texture> = [];
+        const fireflyTextureSeq: Array<Texture> = [];
         for (let i = 0; i < fireflySeq.length; i++){
-            let tex = Texture.from(fireflySeq[i]);
+            const tex = Texture.from(fireflySeq[i]);
             fireflyTextureSeq.push(tex);
         }
         this.cursorFirefly = new AnimatedSprite(fireflyTextureSeq);
@@ -99,29 +100,45 @@ export class Scene9 extends Container implements IScene {
         this.mainContainer.on('pointermove', this.moveCursorFirefly, this);
 
         this.addChild(this.mainContainer);
-        this.addFrame();
         this.addButtons();
     }
 
     public addText(): void {
-        if (this.numClicks == 0) {
+        if (this.numClicks === 0) {
             this.text.position.set(36, 98);
+            this.text.alpha = 0;
             this.hover.position.set(36, 732);
+            this.hover.alpha = 0;
             this.mainContainer.addChild(this.text);
             this.mainContainer.addChild(this.hover);
+            gsap.to(this.text, { alpha: 1, duration: 0.3 });
+            gsap.to(this.hover, { alpha: 1, duration: 0.3 });
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 1) {
-            this.mainContainer.removeChild(this.hover);
-            this.text.texture = Texture.from('scene_9/Text 2.png');
-            this.text.position.set(36, 99);
-
-            this.tiger.texture = Texture.from('scene_9/Strong.png');
-            this.tiger.position.set(920, 5);
-
+        if (this.numClicks === 1) {
+            gsap.to(this.hover, {
+                alpha: 0, duration: 0.2,
+                onComplete: () => this.mainContainer.removeChild(this.hover)
+            });
+            gsap.to(this.text, {
+                alpha: 0, duration: 0.2,
+                onComplete: () => {
+                    this.text.texture = Texture.from('scene_9/Text 2.png');
+                    this.text.position.set(36, 99);
+                    gsap.to(this.text, { alpha: 1, duration: 0.3 });
+                }
+            });
+            const strongTiger = Sprite.from('scene_9/Strong.png');
+            strongTiger.position.set(920, 5);
+            strongTiger.alpha = 0;
+            this.mainContainer.addChild(strongTiger);
+            gsap.to(strongTiger, { alpha: 1, duration: 0.3 });
+            gsap.to(this.rButton, {
+                alpha: 1, duration: 0.3, delay: 0.5,
+                onComplete: () => { this.rButton.interactive = true; }
+            });
             this.numClicks++;
-            this.rButton.visible = true;
             return;
         }
     }
@@ -142,11 +159,11 @@ export class Scene9 extends Container implements IScene {
     }
 
     public moveCursorFirefly(e: InteractionEvent): void {
-        let globalPos: Point = e.data.global;
-        let localPos: Point = this.mainContainer.toLocal(globalPos);
+        const globalPos: Point = e.data.global;
+        const localPos: Point = this.mainContainer.toLocal(globalPos);
 
-        let x_off = 20;
-        let y_off = 20;
+        const x_off = 20;
+        const y_off = 20;
 
         this.cursorFirefly.position.set(localPos.x - x_off, localPos.y + y_off);
     }
@@ -161,8 +178,8 @@ export class Scene9 extends Container implements IScene {
         
         // interactivity
         this.rButton.buttonMode = true;
-        this.rButton.interactive = true;
-        this.rButton.visible = false;
+        this.rButton.interactive = false;
+        this.rButton.alpha = 0;
         this.rButton.on('pointerover', (_event) => {
             this.rButton.texture = rButtonHover;
         });
@@ -198,10 +215,5 @@ export class Scene9 extends Container implements IScene {
 
         this.addChild(this.rButton);
         this.addChild(lButton);
-    }
-
-    public addFrame(): void {
-        const bgFrame: Sprite = Sprite.from('frame.png');
-        this.addChild(bgFrame); // add frame on top of everything
     }
 }
