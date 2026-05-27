@@ -69,12 +69,9 @@ export class IntroScene extends Container implements IScene {
 
         for (let i  = 0; i < this.numFireflies; ++i) {
             let rnd: number = Math.random();
-            if (rnd < 0.5) {
-                var firefly: AnimatedSprite = new AnimatedSprite(fireflyTextureSeq);
-            }
-            else {
-                var firefly: AnimatedSprite = new AnimatedSprite(revFireflyTextureSeq);
-            }
+            const firefly: AnimatedSprite = new AnimatedSprite(
+                rnd < 0.5 ? fireflyTextureSeq : revFireflyTextureSeq
+            );
             let theta = rnd * Math.PI * 2;
             // let x: number = Math.random() * 1626;
             // let y: number = Math.random() * 781;

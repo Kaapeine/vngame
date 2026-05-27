@@ -74,27 +74,27 @@ export class SceneOne extends Container implements IScene {
     }
 
     public showJackal(_event: Event): void {
-        if (this.numClicks == 0) {
+        if (this.numClicks ===0) {
             let jackal: Sprite = Sprite.from('scene_one/jackal_new.png');
             jackal.position.set(1075, 537);
             this.mainContainer.addChild(jackal);
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 1) {
+        if (this.numClicks ===1) {
             this.text1.position.set(80, 200);
             this.mainContainer.addChild(this.text1);
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 2) {
+        if (this.numClicks ===2) {
             this.mainContainer.removeChild(this.text1);
             this.text2.position.set(720, 45);
             this.mainContainer.addChild(this.text2);
             this.numClicks++;
             return;
         }
-        if (this.numClicks == 3){
+        if (this.numClicks ===3){
             this.text2.texture = Texture.from('scene_one/Text3.png');
             this.numClicks++;
             this.rButton.visible = true;
