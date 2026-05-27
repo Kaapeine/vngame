@@ -12,6 +12,7 @@ export class SceneFour extends Container implements IScene {
   private text: Sprite;
   private ingreds: boolean = false;
   private meal: Sprite;
+  private smoke: AnimatedSprite;
 
   private rButton: Sprite = new Sprite();
 
@@ -30,6 +31,18 @@ export class SceneFour extends Container implements IScene {
     fire.play();
     fire.animationSpeed = 0.05;
     this.mainContainer.addChild(fire);
+
+    this.smoke = AnimatedSprite.fromImages([
+      'scene_four/smoke/KitchenSmoke-1.png',
+      'scene_four/smoke/KitchenSmoke-2.png',
+      'scene_four/smoke/KitchenSmoke-3.png',
+      'scene_four/smoke/KitchenSmoke-4.png',
+    ]);
+    this.smoke.position.set(301, 438);
+    this.smoke.play();
+    this.smoke.animationSpeed = 0.05;
+    this.smoke.visible = false;
+    this.mainContainer.addChild(this.smoke);
 
     this.addIngredients();
 
@@ -155,17 +168,8 @@ export class SceneFour extends Container implements IScene {
       2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
     this.cursorFirefly.y +=
       2 * Math.random() * (Math.round(Math.random()) * 2 - 1);
-    if (this.ingreds && this.mainContainer.children.length === 9) {
-      let smoke: AnimatedSprite = AnimatedSprite.fromImages([
-        'scene_four/smoke/KitchenSmoke-1.png',
-        'scene_four/smoke/KitchenSmoke-2.png',
-        'scene_four/smoke/KitchenSmoke-3.png',
-        'scene_four/smoke/KitchenSmoke-4.png',
-      ]);
-      smoke.position.set(301, 438);
-      smoke.play();
-      smoke.animationSpeed = 0.05;
-      this.mainContainer.addChild(smoke);
+    if (this.ingreds && this.mainContainer.children.length === 10) {
+      this.smoke.visible = true;
       this.ingreds = false;
     }
 
