@@ -8,6 +8,10 @@ export const ASSETS: string[] = [
   'lbutton/Back_Hover.png',
   'lbutton/Back_Clicked.png',
 
+  // audio
+  'Music/girlstory_loop1.mp3',
+  'Music/aamistory_loop2.mp3',
+
   // loading screen
   'loading/LoadingCircle.png',
   'loading/LoadingText.png',
