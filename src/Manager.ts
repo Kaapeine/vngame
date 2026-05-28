@@ -31,7 +31,7 @@ export class Manager {
         return Manager._height;
     }
 
-    public static initialize(width: number, height: number, background: number): void {
+    public static initialize(width: number, height: number): void {
         Manager._width = width;
         Manager._height = height;
 
@@ -39,7 +39,7 @@ export class Manager {
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
             resolution: window.devicePixelRatio || 1,
             autoDensity: true,
-            backgroundColor: background,
+            backgroundAlpha: 0,
             width: width,
             height: height
         });

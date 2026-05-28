@@ -47,7 +47,7 @@ const SCENE_MAP: Record<number, () => IScene> = {
     20: () => new IntroScene(),
 };
 
-Manager.initialize(1920, 1080, 0x000000);
+Manager.initialize(1920, 1080);
 
 const params = new URLSearchParams(window.location.search);
 const sceneParam = params.get('scene');
