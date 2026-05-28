@@ -1,6 +1,5 @@
 export const ASSETS: string[] = [
-  // shared
-  'frame.png',
+  // shared (frame.png preloaded in index.ts before loading screen)
   'rbutton/Forward.png',
   'rbutton/Forward_Hover.png',
   'rbutton/Forward_Clicked.png',
@@ -12,18 +11,9 @@ export const ASSETS: string[] = [
   'Music/girlstory_loop1.mp3',
   'Music/aamistory_loop2.mp3',
 
-  // loading screen
-  'loading/LoadingCircle.png',
-  'loading/LoadingText.png',
-
   // intro / firefly cursor (reused across all scenes)
-  'intro_scene/Intro.jpg',
+  // Intro.jpg, firefly-1..5, LoadingCircle, LoadingText preloaded in index.ts
   'intro_scene/intro_text.png',
-  'intro_scene/firefly/firefly-1.png',
-  'intro_scene/firefly/firefly-2.png',
-  'intro_scene/firefly/firefly-3.png',
-  'intro_scene/firefly/firefly-4.png',
-  'intro_scene/firefly/firefly-5.png',
   'intro_scene/rev_firefly/RevFirefly-1.png',
   'intro_scene/rev_firefly/RevFirefly-2.png',
   'intro_scene/rev_firefly/RevFirefly-3.png',
