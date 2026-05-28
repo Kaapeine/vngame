@@ -1,3 +1,4 @@
+import { Loader } from 'pixi.js';
 import { IScene, Manager } from './Manager';
 import { LoadingScreen } from './LoadingScreen';
 import { TitleScene } from './TitleScene';
@@ -46,11 +47,27 @@ const SCENE_MAP: Record<number, () => IScene> = {
     20: () => new IntroScene(),
 };
 
-Manager.initialize(1920, 1080, 0xcccccc);
+Manager.initialize(1920, 1080, 0x000000);
 
 const params = new URLSearchParams(window.location.search);
 const sceneParam = params.get('scene');
 const sceneNum = sceneParam !== null ? parseInt(sceneParam, 10) : NaN;
 const startScene = !isNaN(sceneNum) && SCENE_MAP[sceneNum] ? SCENE_MAP[sceneNum] : null;
 
-Manager.changeScene(new LoadingScreen(startScene));
+// Preload the loading screen's own assets so they all appear at once (not one-by-one)
+const LOADING_SCREEN_ASSETS = [
+    'intro_scene/Intro.jpg',
+    'intro_scene/firefly/firefly-1.png',
+    'intro_scene/firefly/firefly-2.png',
+    'intro_scene/firefly/firefly-3.png',
+    'intro_scene/firefly/firefly-4.png',
+    'intro_scene/firefly/firefly-5.png',
+    'loading/LoadingCircle.png',
+    'loading/LoadingText.png',
+    'frame.png',
+];
+
+Loader.shared.add(LOADING_SCREEN_ASSETS).load(() => {
+    Manager.initStage();
+    Manager.changeScene(new LoadingScreen(startScene));
+});

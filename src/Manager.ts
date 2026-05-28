@@ -50,7 +50,10 @@ export class Manager {
 
         Manager.loop1.loop = true;
         Manager.loop2.loop = true;
+    }
 
+    // Call after preloading loading-screen assets so sprites use cached textures immediately
+    public static initStage(): void {
         // Persistent frame — sits at the bottom; scene content (148,150 offset) doesn't cover the borders
         Manager.persistentFrame = Sprite.from('frame.png');
         Manager.app.stage.addChild(Manager.persistentFrame);
