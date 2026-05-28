@@ -68,43 +68,18 @@ export class Manager {
     public static resize(): void {
         const screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
         const screenHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        const isPortrait = screenHeight > screenWidth;
 
-        // In portrait the canvas will be rotated 90°, so fit against the swapped screen dimensions
-        const fitW = isPortrait ? screenHeight : screenWidth;
-        const fitH = isPortrait ? screenWidth : screenHeight;
-
-        const scale = Math.min(fitW / Manager.width, fitH / Manager.height);
+        const scale = Math.min(screenWidth / Manager.width, screenHeight / Manager.height);
         const scaledW = Math.floor(scale * Manager.width);
         const scaledH = Math.floor(scale * Manager.height);
+        const horizontalMargin = (screenWidth - scaledW) / 2;
+        const verticalMargin = (screenHeight - scaledH) / 2;
 
         const view = Manager.app.view as HTMLCanvasElement;
         view.style.width = `${scaledW}px`;
         view.style.height = `${scaledH}px`;
-
-        if (isPortrait) {
-            // rotate(90deg) keeps the element's center fixed, so standard centering still works
-            // even though scaledW > screenWidth (it goes negative — that's intentional)
-            const left = (screenWidth - scaledW) / 2;
-            const top = (screenHeight - scaledH) / 2;
-            view.style.position = 'fixed';
-            view.style.left = `${left}px`;
-            view.style.top = `${top}px`;
-            view.style.margin = '0';
-            view.style.transform = 'rotate(90deg)';
-            view.style.transformOrigin = 'center center';
-        } else {
-            const horizontalMargin = (screenWidth - scaledW) / 2;
-            const verticalMargin = (screenHeight - scaledH) / 2;
-            view.style.position = '';
-            view.style.left = '';
-            view.style.top = '';
-            view.style.margin = '';
-            view.style.marginLeft = view.style.marginRight = `${horizontalMargin}px`;
-            view.style.marginTop = view.style.marginBottom = `${verticalMargin}px`;
-            view.style.transform = '';
-            view.style.transformOrigin = '';
-        }
+        view.style.marginLeft = view.style.marginRight = `${horizontalMargin}px`;
+        view.style.marginTop = view.style.marginBottom = `${verticalMargin}px`;
     }
 
     public static fadeTransition(onMid: () => void): void {
